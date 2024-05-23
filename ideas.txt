@@ -1,45 +1,5 @@
 
 
--e endpoint    read from file, read from env, read from arg
--k key
-
--d database
--c container
-
--m index metrix
--o output file
-
-
-Could we read -e -k -d -d from a file? Maybe a .cosmos file?
-Could we pipe in a query?
-Should we support paging?
-
-cosmos select "Select * from c" -c "tasks" -m
-
-cosmos select "Select * from c" -c "tasks" >> results.json
-
-cosmos select "Select * from c" -c "tasks" -o results.json
-
-cosmos select "Select * from c" -c "tasks" -o results.json
-
-
-Could we pipe in a json?
-How can we figure out the id and partition key on the container?
-Should we run fast and slow it down?
-
-cosmos upsert "{id: 1, test: 1}" -c "tasks"
-
-cosmos upsert "[{id: 1, test: 1}, {id: 2, test: 2}]" -c "tasks"
-
-
-
-
-
-cosmos delete "{id: 1, test: 1}" -c "tasks"
-
-cosmos delete "[{id: 1, test: 1}, {id: 2, test: 2}]" -c "tasks"
-
-
 Can we get a list of containers?
 Should we allow you to create a container?
 
@@ -58,25 +18,22 @@ cosmos database --list
 cosmos database
 
 
+# Create the CLI tool
 dotnet pack -c Release
 dotnet tool install --global --add-source Package/ cosmos
 
 
-
+# Run and test from the command line
 dotnet build
 dotnet .\bin\Debug\net8.0\CosmosCli.dll me --name Bill --age 20
 
 dotnet run -- select --help
 
 
-
-
-
-
-# seed data
+# Seed test data
 cosmicworks --endpoint https://localhost:8081 --key C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw== --datasets product
 
 # Read the product data, pipe the results to jq and remove the tags and add a date, then pipe the back into the upsert
 cosmos select -d cosmicworks -c products -_ -j "Select * from c" |
-	jq '[.[] | del(.tags) | .date="20240522"]' | 
+	jq '[.[] | del(.tags) | .date="20240522"]' |
 	cosmos upsert -d cosmicworks -c products -p categoryId
