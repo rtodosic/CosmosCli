@@ -5,12 +5,25 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackAsTool>true</PackAsTool>
+    <PackageId>Cosmos</PackageId>
+    <Version>0.0.0</Version>
+    <Title>Cosmos</Title>
     <ToolCommandName>Cosmos</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
+    <Authors>Richard Todosichuk</Authors>
+    <Description>Command line tool to select, upset, remove documents from a Cosmos DB.</Description>
+    <Copyright>2024</Copyright>
+    <RepositoryUrl>https://github.com/rtodosic/CosmosCli</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Platforms>AnyCPU</Platforms> 
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Cocona" Version="2.2.0" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.38.0" />
+  </ItemGroup>
+    <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0">
     <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />

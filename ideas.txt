@@ -20,9 +20,9 @@ cosmos database
 
 # Create the CLI tool
 dotnet pack -c Release
-dotnet pack -c Release -p:PackageVersion=1.0.2
+dotnet pack -c Release -p:PackageVersion=0.0.0
 
-dotnet tool install --global --add-source Package/ cosmos
+dotnet tool install --global --add-source nupkg/cosmos
 
 
 # Run and test from the command line
@@ -39,3 +39,10 @@ cosmicworks --endpoint https://localhost:8081 --key C2y6yDjf5/R+ob0N8A7Cgv30VRDJ
 cosmos select -d cosmicworks -c products -_ -j "Select * from c" |
 	jq '[.[] | del(.tags) | .date="20240522"]' |
 	cosmos upsert -d cosmicworks -c products -p categoryId
+
+
+
+## Husky.net
+https://medium.com/@codeatom/integrate-githooks-using-husky-net-51122fdddbf5
+https://medium.com/codenx/power-of-conventional-commits-in-net-projects-1ac4c382354b
+https://kapeli.com/cheat_sheets/Conventional_Commits.docset/Contents/Resources/Documents/index
