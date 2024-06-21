@@ -20,6 +20,8 @@ cosmos database
 
 # Create the CLI tool
 dotnet pack -c Release
+dotnet pack -c Release -p:PackageVersion=1.0.2
+
 dotnet tool install --global --add-source Package/ cosmos
 
 

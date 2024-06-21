@@ -7,16 +7,12 @@
     <Nullable>enable</Nullable>
 	<PackAsTool>true</PackAsTool>
 	<ToolCommandName>Cosmos</ToolCommandName>
-	<PackageOutputPath>./Package</PackageOutputPath>
+	<PackageOutputPath>./nupkg</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Cocona" Version="2.2.0" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.38.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Package\" />
   </ItemGroup>
 
 </Project>
