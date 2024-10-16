@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CosmosCli", "CosmosCli\CosmosCli.csproj", "{4BD253C1-7BAE-4B7E-AA2E-36D3C29B6141}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EE4442E4-6FC3-4DF1-9C92-F3B49CC2E718}"
+	ProjectSection(SolutionItems) = preProject
+		ideas.txt = ideas.txt
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4BD253C1-7BAE-4B7E-AA2E-36D3C29B6141}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BD253C1-7BAE-4B7E-AA2E-36D3C29B6141}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BD253C1-7BAE-4B7E-AA2E-36D3C29B6141}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BD253C1-7BAE-4B7E-AA2E-36D3C29B6141}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {232A9D26-3C83-4CE9-B050-50CF5E47D09A}
+	EndGlobalSection
+EndGlobal

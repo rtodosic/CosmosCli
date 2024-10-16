@@ -1,0 +1,40 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "Cosmos Select": {
+      "commandName": "Project",
+      "commandLineArgs": "select -d cosmicworks -c products -s -m -v \"Select * from c where c.price > 10\""
+    },
+    "Cosmos Upsert": {
+      "commandName": "Project",
+      "commandLineArgs": "upsert -d cosmicworks -c products -v -p categoryId -s \"[{\\\"id\\\": \\\"9851FE19-CCA4-4B94-B6AC-CCE579D7F693\\\",\\\"categoryId\\\": \\\"86F3CBAB-97A7-4D01-BABB-ADEFFFAED6B4\\\",\\\"categoryName\\\": \\\"Accessories, Tires and Tubes\\\",\\\"sku\\\": \\\"TI-M823\\\",\\\"name\\\": \\\"HL Mountain Tire\\\",\\\"description\\\": \\\"The product called HL Mountain Tire\\\",\\\"price\\\": 35,\\\"tags\\\": []}]\""
+    },
+    "Cosmos Select Simple": {
+      "commandName": "Project",
+      "commandLineArgs": "select -d cosmicworks -c products \"Select * from c where c.price > 10\""
+    },
+    "Cosmos Upsert Simple": {
+      "commandName": "Project",
+      "commandLineArgs": "upsert -d cosmicworks -c products -p categoryId \"[{\\\"id\\\": \\\"9851FE19-CCA4-4B94-B6AC-CCE579D7F693\\\",\\\"categoryId\\\": \\\"86F3CBAB-97A7-4D01-BABB-ADEFFFAED6B4\\\",\\\"categoryName\\\": \\\"Accessories, Tires and Tubes\\\",\\\"sku\\\": \\\"TI-M823\\\",\\\"name\\\": \\\"HL Mountain Tire\\\",\\\"description\\\": \\\"The product called HL Mountain Tire\\\",\\\"price\\\": 35,\\\"tags\\\": []}]\""
+    },
+    "Cosmos help": {
+      "commandName": "Project",
+      "commandLineArgs": "--help"
+    },
+    "Cosmos select help": {
+      "commandName": "Project",
+      "commandLineArgs": "select --help"
+    },
+    "Cosmos upsert help": {
+      "commandName": "Project",
+      "commandLineArgs": "upsert --help"
+    },
+    "Cosmos account": {
+      "commandName": "Project",
+      "commandLineArgs": "account"
+    }
+  }
+}
