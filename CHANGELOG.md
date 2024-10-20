@@ -3,7 +3,11 @@
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
 <a name="0.0.0"></a>
-## [0.0.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.0.0) (2024-09-05)
+## [0.0.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.0.0) (2024-10-20)
+
+### Features
+
+* initial commit ([27c0e93](https://www.github.com/rtodosic/CosmosCli/commit/27c0e93a0351480c4271a3338ce54c3edc54b8c1))
 
 ### Features
 
