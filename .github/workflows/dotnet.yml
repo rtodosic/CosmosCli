@@ -56,6 +56,8 @@ jobs:
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
@@ -72,7 +74,7 @@ jobs:
         asset_name: CosmosCli.nupkg
         asset_content_type: application/octet-stream
 
-    - name: 'Create release'
+    - name: Create release
       if: steps.versionize.outcome == 'success'
       uses: 'actions/github-script@v5'
       with:
