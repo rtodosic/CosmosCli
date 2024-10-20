@@ -39,6 +39,8 @@ jobs:
       run: |
         git checkout .husky/commit-msg
         git checkout .husky/pre-commit
+        git checkout .husky/_/.gitignore
+        git checkout .husky/_/husky.sh
     - name: Versionize Release
       id: versionize
       run: versionize --exit-insignificant-commits
@@ -54,6 +56,7 @@ jobs:
         branch: ${{ github.ref }}
         tags: true
     - name: Create GitHub Release
+      if: steps.versionize.outcome != 'success'
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -67,6 +70,7 @@ jobs:
           Release notes for ${{ github.ref }}
   
     - name: Upload Release Asset
+      if: steps.versionize.outcome != 'success'
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
