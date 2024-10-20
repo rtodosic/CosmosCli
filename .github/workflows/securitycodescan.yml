@@ -25,7 +25,12 @@ jobs:
       - uses: nuget/setup-nuget@04b0c2b8d1b97922f67eca497d7cf0bf17b8ffe1
       - uses: microsoft/setup-msbuild@v1.0.2
 
-      - name: Setup .NET
+      - name: Setup .NET 3.1 for sarif
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '3.1.x'
+
+      - name: Setup .NET 8.0 for project
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
