@@ -85,8 +85,6 @@ public static class AccountCommand
                             Utilities.WriteLine($"     LastModified: {database.LastModified}");
                         }
                     }
-
-
                 }
                 catch (Exception ex)
                 {
