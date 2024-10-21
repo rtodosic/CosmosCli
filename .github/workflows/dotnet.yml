@@ -19,42 +19,45 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
     - name: Install Versionize
       run: dotnet tool install --global Versionize
+
     - name: Install dotnet format
       run: dotnet tool install -g dotnet-format
+
     - name: Setup git
       run: |
         git config --local user.email "rtodosic@hotmail.com"
         git config --local user.name "Richard Todosichuk"
+
     - name: Restore dependencies
       run: dotnet restore
+
     - name: Pack
       run: dotnet pack -c Release
+
     - name: Undo husky changes
       run: |
         git checkout .husky/commit-msg
         git checkout .husky/pre-commit
         git checkout .husky/_/.gitignore
         git checkout .husky/_/husky.sh
+
     - name: Versionize Release
       id: versionize
       run: versionize --exit-insignificant-commits
       continue-on-error: true
+
     - name: No release required
       if: steps.versionize.outcome != 'success'
       run: echo "Skipping Release. No release required."
-    - name: Push changes to GitHub
-      if: steps.versionize.outcome == 'success'
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
-        tags: true
+
     - name: Create GitHub Release
       if: steps.versionize.outcome == 'success'
       id: create_release
@@ -78,25 +81,33 @@ jobs:
         asset_name: CosmosCli.nupkg
         asset_content_type: application/octet-stream
 
-    - name: Create release
+    - name: Push changes to GitHub
       if: steps.versionize.outcome == 'success'
-      uses: 'actions/github-script@v5'
+      uses: ad-m/github-push-action@master
       with:
-        github-token: '${{ secrets.GITHUB_TOKEN }}'
-        script: |
-          try {
-            const tags_url = context.payload.repository.tags_url + "?per_page=1"
-            const result = await github.request(tags_url)
-            const current_tag = result.data[0].name
-            await github.rest.repos.createRelease({
-              draft: false,
-              generate_release_notes: true,
-              name: current_tag,
-              owner: context.repo.owner,
-              prerelease: false,
-              repo: context.repo.repo,
-              tag_name: current_tag,
-            });
-          } catch (error) {
-            core.setFailed(error.message);
-          }
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+        tags: true
+
+    # - name: Create release
+    #   if: steps.versionize.outcome == 'success'
+    #   uses: 'actions/github-script@v5'
+    #   with:
+    #     github-token: '${{ secrets.GITHUB_TOKEN }}'
+    #     script: |
+    #       try {
+    #         const tags_url = context.payload.repository.tags_url + "?per_page=1"
+    #         const result = await github.request(tags_url)
+    #         const current_tag = result.data[0].name
+    #         await github.rest.repos.createRelease({
+    #           draft: false,
+    #           generate_release_notes: true,
+    #           name: current_tag,
+    #           owner: context.repo.owner,
+    #           prerelease: false,
+    #           repo: context.repo.repo,
+    #           tag_name: current_tag,
+    #         });
+    #       } catch (error) {
+    #         core.setFailed(error.message);
+    #       }
