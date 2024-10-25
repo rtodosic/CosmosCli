@@ -63,21 +63,18 @@ jobs:
       id: create_release
       uses: ncipollo/release-action@v1.14.0
       with:
-        tag: ${{ github.ref }}
-        token:  ${{ secrets.GITHUB_TOKEN }}
-        draft: false
-        prerelease: false
+        artifacts: "**/*.nupkg"
         body: |
           Release notes for ${{ github.ref }}
   
-    - name: Upload Release Asset
-      if: steps.versionize.outcome == 'success'
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./nupkg/CosmosCli*.nupkg
-        asset_name: CosmosCli.nupkg
-        asset_content_type: application/octet-stream
+    # - name: Upload Release Asset
+    #   if: steps.versionize.outcome == 'success'
+    #   uses: actions/upload-release-asset@v1
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: ./nupkg/CosmosCli*.nupkg
+    #     asset_name: CosmosCli.nupkg
+    #     asset_content_type: application/octet-stream
 
     - name: Push changes to GitHub
       if: steps.versionize.outcome == 'success'
