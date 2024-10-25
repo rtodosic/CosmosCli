@@ -65,7 +65,7 @@ jobs:
       with:
         artifacts: "**/*.nupkg"
         body: |
-          Release notes for ${{ github.ref }}
+          Release notes
   
     # - name: Upload Release Asset
     #   if: steps.versionize.outcome == 'success'
