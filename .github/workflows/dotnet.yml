@@ -64,10 +64,11 @@ jobs:
       uses: ncipollo/release-action@v1.14.0
       with:
         artifacts: "**/*.nupkg"
+        name: ${{ github.ref_name }} 
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ github.ref_name }}
         body: |
-          Release notes
+          Release notes ${{ github.ref_name }}
   
     # - name: Upload Release Asset
     #   if: steps.versionize.outcome == 'success'
