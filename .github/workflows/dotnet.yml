@@ -68,7 +68,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ github.ref_name }}
         body: |
-          Release notes - ${{ github.ref_name }}
+          Release notes ${{ github.ref_name }}
   
     # - name: Upload Release Asset
     #   if: steps.versionize.outcome == 'success'
