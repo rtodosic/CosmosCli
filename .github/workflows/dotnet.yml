@@ -74,7 +74,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ steps.tag.outputs.tag }}
         body: |
-          Release notes ${{ steps.tag.outputs.tag }}
+          Release notes [${{ steps.tag.outputs.tag }}](https://github.com/rtodosic/CosmosCli/blob/main/CHANGELOG.md)
   
     - name: Push changes to GitHub
       if: steps.versionize.outcome == 'success'
