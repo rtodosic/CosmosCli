@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.0.3"></a>
+## [0.0.3](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.0.3) (2024-10-28)
+
+### Bug Fixes
+
+* test release 2 ([190afd4](https://www.github.com/rtodosic/CosmosCli/commit/190afd4dfff32a16cd28fa84a503ca9c8080fa47))
+* test release again ([2564aab](https://www.github.com/rtodosic/CosmosCli/commit/2564aaba31a940abb1e93dc4111b0d69a7588cff))
+* test release again ([155d523](https://www.github.com/rtodosic/CosmosCli/commit/155d5230aa9285849dc452b69f843b96018914df))
+* test release again ([9604da4](https://www.github.com/rtodosic/CosmosCli/commit/9604da4ada13882c0c954fb37ba6b72741f1519e))
+
 <a name="0.0.2"></a>
 ## [0.0.2](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.0.2) (2024-10-27)
 
