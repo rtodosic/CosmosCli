@@ -76,7 +76,6 @@ jobs:
         artifacts: "**/*.nupkg"
         name: ${{ steps.tag.outputs.tag }}
         token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ steps.tag.outputs.tag }}
         body: |
           Release notes [${{ steps.tag.outputs.tag }}](https://github.com/rtodosic/CosmosCli/blob/main/CHANGELOG.md)
   
