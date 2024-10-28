@@ -54,7 +54,7 @@ jobs:
       run: versionize --exit-insignificant-commits
       continue-on-error: true
 
-    - name: Pack
+    - name: Pack Nuget file
       run: dotnet pack -c Release
 
     - name: No release required
