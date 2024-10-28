@@ -49,6 +49,12 @@ jobs:
         git checkout .husky/_/.gitignore
         git checkout .husky/_/husky.sh
 
+    - name: Get most recent tag
+      id: tag
+      run: |
+        tag=$(git describe --tags --abbrev=0)
+        echo "tag=$tag" >> $GITHUB_OUTPUT  
+        
     - name: Versionize Release
       id: versionize
       run: versionize --exit-insignificant-commits
@@ -64,21 +70,12 @@ jobs:
       uses: ncipollo/release-action@v1.14.0
       with:
         artifacts: "**/*.nupkg"
-        name: ${{ github.ref_name }} 
+        name: ${{ steps.tag.outputs.tag }}
         token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ github.ref_name }}
+        tag: ${{ steps.tag.outputs.tag }}
         body: |
-          Release notes ${{ github.ref_name }}
+          Release notes ${{ steps.tag.outputs.tag }}
   
-    # - name: Upload Release Asset
-    #   if: steps.versionize.outcome == 'success'
-    #   uses: actions/upload-release-asset@v1
-    #   with:
-    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #     asset_path: ./nupkg/CosmosCli*.nupkg
-    #     asset_name: CosmosCli.nupkg
-    #     asset_content_type: application/octet-stream
-
     - name: Push changes to GitHub
       if: steps.versionize.outcome == 'success'
       uses: ad-m/github-push-action@master
@@ -86,26 +83,3 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
         tags: true
-
-    # - name: Create release
-    #   if: steps.versionize.outcome == 'success'
-    #   uses: 'actions/github-script@v5'
-    #   with:
-    #     github-token: '${{ secrets.GITHUB_TOKEN }}'
-    #     script: |
-    #       try {
-    #         const tags_url = context.payload.repository.tags_url + "?per_page=1"
-    #         const result = await github.request(tags_url)
-    #         const current_tag = result.data[0].name
-    #         await github.rest.repos.createRelease({
-    #           draft: false,
-    #           generate_release_notes: true,
-    #           name: current_tag,
-    #           owner: context.repo.owner,
-    #           prerelease: false,
-    #           repo: context.repo.repo,
-    #           tag_name: current_tag,
-    #         });
-    #       } catch (error) {
-    #         core.setFailed(error.message);
-    #       }
