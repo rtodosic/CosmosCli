@@ -39,6 +39,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
+    - name: Versionize Release
+      id: versionize
+      run: versionize --exit-insignificant-commits
+      continue-on-error: true
+
     - name: Pack
       run: dotnet pack -c Release
 
@@ -49,21 +54,17 @@ jobs:
         git checkout .husky/_/.gitignore
         git checkout .husky/_/husky.sh
 
+    - name: No release required
+      if: steps.versionize.outcome != 'success'
+      run: echo "Skipping Release. No release required."
+  
     - name: Get most recent tag
+      if: steps.versionize.outcome == 'success'
       id: tag
       run: |
         tag=$(git describe --tags --abbrev=0)
         echo "tag=$tag" >> $GITHUB_OUTPUT  
         
-    - name: Versionize Release
-      id: versionize
-      run: versionize --exit-insignificant-commits
-      continue-on-error: true
-
-    - name: No release required
-      if: steps.versionize.outcome != 'success'
-      run: echo "Skipping Release. No release required."
-
     - name: Create GitHub Release
       if: steps.versionize.outcome == 'success'
       id: create_release
