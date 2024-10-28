@@ -67,7 +67,14 @@ jobs:
       run: |
         tag=$(git describe --tags --abbrev=0)
         echo "tag=$tag" >> $GITHUB_OUTPUT  
-        
+
+    - name: Push changes to GitHub
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+        tags: true
+
     - name: Create GitHub Release
       if: steps.versionize.outcome == 'success'
       id: create_release
@@ -79,10 +86,4 @@ jobs:
         tag: ${{ steps.tag.outputs.tag }}
         body: |
           Release notes [${{ steps.tag.outputs.tag }}](https://github.com/rtodosic/CosmosCli/blob/main/CHANGELOG.md)
-  
-    - name: Push changes to GitHub
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
-        tags: true
+
