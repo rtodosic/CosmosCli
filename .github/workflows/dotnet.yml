@@ -57,7 +57,7 @@ jobs:
     - name: Pack file for Nuget
       run: dotnet pack -c Release
 
-    - name: No release required
+    - name: No Release Required
       if: steps.versionize.outcome != 'success'
       run: echo "Skipping Release. No release required."
   
