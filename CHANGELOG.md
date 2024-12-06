@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.1.0"></a>
+## [0.1.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.1.0) (2024-12-06)
+
+### Features
+
+* reorganized the code so that account, database, and container ([35e3f02](https://www.github.com/rtodosic/CosmosCli/commit/35e3f021153cd7cbaf387055c0c5e777897a5763))
+
 <a name="0.0.6"></a>
 ## [0.0.6](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.0.6) (2024-10-28)
 
