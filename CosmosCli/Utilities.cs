@@ -8,17 +8,6 @@ namespace CosmosCli;
 
 public static class Utilities
 {
-    public static void VerboseWriteLine(bool isVerbose, string value)
-    {
-        if (isVerbose)
-        {
-            var currentColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine(value);
-            Console.ForegroundColor = currentColor;
-        }
-    }
-
     public static void ErrorWriteLine(string value)
     {
         var currentColor = Console.ForegroundColor;

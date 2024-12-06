@@ -47,13 +47,14 @@ cosmos --help
 ```
 
 ```text
-Usage: Cosmos [command]
+Usage: CosmosCli [command]
 
-Cosmos
+CosmosCli
 
 Commands:
-  select
-  upsert
+  account
+  database
+  container
 
 Options:
   -h, --help    Show help message
@@ -61,39 +62,27 @@ Options:
 ```
 
 ```bash
-cosmos select --help
+cosmos container --help
 ```
 
 ```text
-Usage: Cosmos select [--endpoint <String>] [--key <String>] [--database <String>] [--container <String>] [--verbose] [--drop-system-properties] [--compress-json] [--show-response-stats] [--max-enumerations <Int32>] [--consistency-level <String>] [--enable-low-precision-order-by] [--enable-optimistic-direct-execution] [--enable-scan-in-query] [--exclude-region <String>...] [--max-item-count <Int32>] [--populate-index-metrics] [--response-continuation-token-limit-in-kb <Int32>] [--session-token <String>] [--help] query
+Usage: CosmosCli container [command]
 
-Arguments:
-  0: query
+CosmosCli
+
+Commands:
+  new
+  delete
+  index
+  select
+  upsert
 
 Options:
-  -e, --endpoint <String>                              The endpointUri used to connect to the Cosmos DB service
-  -k, --key <String>                                   The primary or secondary key used to connect to the Cosmos DB service.
-  -d, --database <String>                              The name of the database that you are connecting to in Cosmos DB.
-  -c, --container <String>                             The name of the container that you are connecting to in Cosmos DB.
-  -v, --verbose                                        Display more details of what is happening.
-  -_, --drop-system-properties                         Drop system generated properties (_rid, _attachments, _etag, _self, _ts).
-  -j, --compress-json                                  Compress the json output by removing whitespace and carriage returns.
-  -s, --show-response-stats                            Show response statistics (including RUs, StatusCode, ContinuationToken).
-  -p, --max-enumerations <Int32>                       The maximum number of enumerations (Default is 100). (Default: 100)
-  -l, --consistency-level <String>                     Consistency Level (Eventual, ConsistentPrefix, Session, BoundedStaleness, Strong)
-  --enable-low-precision-order-by                      Set low precision order by in your Azure Cosmos DB query.
-  --enable-optimistic-direct-execution                 Disable direct (optimistic) execution of the query.
-  --enable-scan-in-query                               Enable scans on the queries.
-  -r, --exclude-region <String>...                     Exclude region(s) while querying
-  -i, --max-item-count <Int32>                         The maximum of items in an enumeration
-  -m, --populate-index-metrics                         Obtain which existing indexes where used and potential new indexes
-  --response-continuation-token-limit-in-kb <Int32>    The response continuation token limit in KB request option for document query requests.
-  -t, --session-token <String>                         Set a session token in the query request.
-  -h, --help                                           Show help message
+  -h, --help    Show help message
 ```
 
 ```bash
-cosmos upsert --help
+cosmos container upsert --help
 ```
 
 ```text

@@ -19,8 +19,8 @@
     <Platforms>AnyCPU</Platforms> 
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Cocona" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.38.0" />
+    <PackageReference Include="Cocona.Lite" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.45.2" />
   </ItemGroup>
     <ItemGroup>
     <None Include="..\README.md" Pack="true" PackagePath="\" />
