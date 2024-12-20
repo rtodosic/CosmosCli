@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.1.1"></a>
+## [0.1.1](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.1.1) (2024-12-20)
+
+### Bug Fixes
+
+* added more details to 'account show' as a JSON output ([28abaeb](https://www.github.com/rtodosic/CosmosCli/commit/28abaeb80458a33505eb450a6247e225ceefbc12))
+* renamed upsert to upsert-item and added delete-item ([9b8c83f](https://www.github.com/rtodosic/CosmosCli/commit/9b8c83f0a4e60a3df8d8df71688269e5aa84af16))
+
 <a name="0.1.0"></a>
 ## [0.1.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.1.0) (2024-12-06)
 
