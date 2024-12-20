@@ -6,6 +6,8 @@ using CosmosCli.Parameters;
 
 using Microsoft.Azure.Cosmos;
 
+using Newtonsoft.Json.Linq;
+
 namespace CosmosCli.Commands;
 
 public static class AccountShowCommand
@@ -24,44 +26,34 @@ public static class AccountShowCommand
                 var client = new CosmosClient(accountParams.Endpoint, accountParams.Key);
 
                 var accountInfo = await client.ReadAccountAsync();
-                Utilities.WriteLine("");
-                Utilities.WriteLine($"Account Id: {accountInfo.Id}");
-                Utilities.WriteLine($"Consistency.DefaultConsistencyLevel: {accountInfo.Consistency.DefaultConsistencyLevel}");
-                Utilities.WriteLine($"Consistency.MaxStalenessIntervalInSeconds: {accountInfo.Consistency.MaxStalenessIntervalInSeconds}");
-                Utilities.WriteLine($"Consistency.MaxStalenessPrefix: {accountInfo.Consistency.MaxStalenessPrefix}");
-                Utilities.WriteLine($"ETag: {accountInfo.ETag}");
-                if (accountInfo.ReadableRegions.Any())
-                {
-                    Utilities.WriteLine("ReadableRegions:");
-                    foreach (var region in accountInfo.ReadableRegions)
-                    {
-                        Utilities.WriteLine($"   - {region.Name}");
-                        Utilities.WriteLine($"     {region.Endpoint}");
-                    }
-                }
-                if (accountInfo.WritableRegions.Any())
-                {
-                    Utilities.WriteLine("WritableRegions:");
-                    foreach (var region in accountInfo.WritableRegions)
-                    {
-                        Utilities.WriteLine($"   - {region.Name}");
-                        Utilities.WriteLine($"     {region.Endpoint}");
-                    }
-                }
 
-                var iterator = client.GetDatabaseQueryIterator<DatabaseProperties>();
-                while (iterator.HasMoreResults)
+                JObject jsonObject = JObject.FromObject(accountInfo);
+                jsonObject["databases"] = new JArray();
+
+
+                var databaseIterator = client.GetDatabaseQueryIterator<DatabaseProperties>();
+                while (databaseIterator.HasMoreResults)
                 {
-                    Utilities.WriteLine("");
-                    Utilities.WriteLine("Database:");
-                    foreach (var database in await iterator.ReadNextAsync())
+                    foreach (var databaseInfo in await databaseIterator.ReadNextAsync())
                     {
-                        Utilities.WriteLine($"   - Database Id: {database.Id}");
-                        Utilities.WriteLine($"     SelfLink: {database.SelfLink}");
-                        Utilities.WriteLine($"     ETag: {database.ETag}");
-                        Utilities.WriteLine($"     LastModified: {database.LastModified}");
+                        JObject databaseJsonObject = JObject.FromObject(databaseInfo);
+                        ((JArray)jsonObject["databases"]).Add(databaseJsonObject);
+                        databaseJsonObject["containers"] = new JArray();
+
+                        Database db = client.GetDatabase(databaseInfo.Id);
+                        FeedIterator<ContainerProperties> containerIterator = db.GetContainerQueryIterator<ContainerProperties>();
+                        while (containerIterator.HasMoreResults)
+                        {
+                            foreach (var containerInfo in await containerIterator.ReadNextAsync())
+                            {
+                                JObject containerJsonObject = JObject.FromObject(containerInfo);
+                                ((JArray)databaseJsonObject["containers"]).Add(containerJsonObject);
+
+                            }
+                        }
                     }
                 }
+                Utilities.WriteLine(jsonObject.ToString());
             }
             catch (Exception ex)
             {
