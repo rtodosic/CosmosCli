@@ -5,7 +5,6 @@ using CosmosCli.Commands;
 var builder = CoconaLiteApp.CreateBuilder();
 
 var app = builder.Build();
-
 app.AddSubCommand("account", a =>
 {
     a.AddCommand("show", AccountShowCommand.Command);
@@ -24,7 +23,8 @@ app.AddSubCommand("container", a =>
     a.AddCommand("delete", ContainerDeleteCommand.Command);
     a.AddCommand("index", ContainerIndexCommand.Command);
     a.AddCommand("select", ContainerSelectCommand.Command);
-    a.AddCommand("upsert", ContainerUpsertCommand.Command);
+    a.AddCommand("upsert-item", ContainerUpsertItemCommand.Command);
+    a.AddCommand("delete-item", ContainerDeleteItemCommand.Command);
 });
 
 app.Run();

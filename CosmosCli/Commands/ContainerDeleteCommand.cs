@@ -4,8 +4,6 @@ using CosmosCli.Parameters;
 
 using Microsoft.Azure.Cosmos;
 
-using Newtonsoft.Json;
-
 namespace CosmosCli.Commands;
 
 public static class ContainerDeleteCommand
@@ -48,18 +46,6 @@ public static class ContainerDeleteCommand
             Console.ForegroundColor = defaultConsoleColor;
         }
         return 0;
-    }
-
-    private static IndexingPolicy ReadIndexFile(string? indexFilename)
-    {
-        if (indexFilename is not null && File.Exists(indexFilename))
-        {
-            string json = File.ReadAllText(indexFilename);
-            IndexingPolicy indexingPolicy = JsonConvert.DeserializeObject<IndexingPolicy>(json);
-
-            return indexingPolicy;
-        }
-        return new IndexingPolicy();
     }
 
     private static ContainerDeleteParameters LoadParams(ContainerDeleteParameters containerDeleteParams)

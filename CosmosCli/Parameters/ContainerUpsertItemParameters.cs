@@ -2,7 +2,7 @@
 
 namespace CosmosCli.Parameters;
 
-public class ContainerUpsertParameters : BaseParameters
+public class ContainerUpsertItemParameters : BaseParameters
 {
     // Common Params
 
@@ -24,10 +24,6 @@ public class ContainerUpsertParameters : BaseParameters
     [Option('p', Description = "Specify the name of the partition key which is provided in the input json.")]
     [HasDefaultValue]
     public string PartitionKey { get; set; } = "";
-
-    [Option('a', Description = "Specify the partition key value which will be used during the upsert.")]
-    [HasDefaultValue]
-    public string PartitionKeyValue { get; set; } = "";
 
     [Option('i', Description = "After upsert don't display the saved items.")]
     [HasDefaultValue]
@@ -65,18 +61,26 @@ public class ContainerUpsertParameters : BaseParameters
     public override void ValidateParams()
     {
         base.ValidateParams();
-        if (string.IsNullOrWhiteSpace(PartitionKey) && string.IsNullOrWhiteSpace(PartitionKeyValue))
+        if (string.IsNullOrWhiteSpace(Database))
         {
-            throw new CommandExitedException("PartitionKey or PartitionKeyValue is required", -15);
+            throw new CommandExitedException("Please specify a database", -12);
+        }
+        if (string.IsNullOrWhiteSpace(Container))
+        {
+            throw new CommandExitedException("Please specify a container", -13);
+        }
+        if (string.IsNullOrWhiteSpace(PartitionKey))
+        {
+            throw new CommandExitedException("PartitionKey is required", -15);
         }
     }
 
     public override void Apply(BaseParameters applyParams)
     {
         base.Apply(applyParams);
-        if (applyParams is ContainerUpsertParameters)
+        if (applyParams is ContainerUpsertItemParameters)
         {
-            var upsertParams = (ContainerUpsertParameters)applyParams;
+            var upsertParams = (ContainerUpsertItemParameters)applyParams;
             if (!string.IsNullOrWhiteSpace(upsertParams.Database))
                 this.Database = upsertParams.Database;
             if (!string.IsNullOrWhiteSpace(upsertParams.Container))
@@ -85,8 +89,6 @@ public class ContainerUpsertParameters : BaseParameters
             this.ShowResponseStats = upsertParams.ShowResponseStats;
             if (!string.IsNullOrWhiteSpace(upsertParams.PartitionKey))
                 this.PartitionKey = upsertParams.PartitionKey;
-            if (!string.IsNullOrWhiteSpace(upsertParams.PartitionKeyValue))
-                this.PartitionKeyValue = upsertParams.PartitionKeyValue;
             this.HideResults = upsertParams.HideResults;
             if (upsertParams.ConsistencyLevel is not null)
                 this.ConsistencyLevel = upsertParams.ConsistencyLevel;

@@ -15,9 +15,9 @@ using Newtonsoft.Json.Linq;
 
 namespace CosmosCli.Commands;
 
-public static class ContainerUpsertCommand
+public static class ContainerUpsertItemCommand
 {
-    public static async Task<int> Command(ContainerUpsertParameters upsertParams, [Argument] string? jsonItems = null)
+    public static async Task<int> Command(ContainerUpsertItemParameters upsertParams, [Argument] string? jsonItems = null)
     {
         var defaultConsoleColor = Console.ForegroundColor;
         try
@@ -27,7 +27,7 @@ public static class ContainerUpsertCommand
 
 
             ValidateJson(upsertParams, jsonItems);
-            ValidateParams(upsertParams);
+            upsertParams.ValidateParams();
 
             try
             {
@@ -99,42 +99,22 @@ public static class ContainerUpsertCommand
         return 0;
     }
 
-    private static void ValidateParams(ContainerUpsertParameters upsertParams)
-    {
-        if (string.IsNullOrWhiteSpace(upsertParams.Endpoint))
-        {
-            throw new CommandExitedException("endpoint is required", -10);
-        }
-
-        if (string.IsNullOrWhiteSpace(upsertParams.Key))
-        {
-            throw new CommandExitedException(" key is required", -11);
-        }
-        if (string.IsNullOrWhiteSpace(upsertParams.Database))
-        {
-            throw new CommandExitedException("Please specify a database", -12);
-        }
-        if (string.IsNullOrWhiteSpace(upsertParams.Container))
-        {
-            throw new CommandExitedException("Please specify a container", -13);
-        }
-    }
-
-    private static void ValidateJson(ContainerUpsertParameters upsertParams, string? jsonItems)
+    private static void ValidateJson(ContainerUpsertItemParameters upsertParams, string? jsonItems)
     {
         if (string.IsNullOrWhiteSpace(jsonItems))
             throw new CommandExitedException("Please specify the JSON items to be upserted", -14);
+        // TODO: Validate that the JSON contains the id and partitionKey properties
     }
 
-    private static string? LoadJson(ContainerUpsertParameters upsertParams, string? jsonItems)
+    private static string? LoadJson(ContainerUpsertItemParameters upsertParams, string? jsonItems)
     {
         return Utilities.ReadFromPipeIfNull(jsonItems);
     }
 
-    private static ContainerUpsertParameters LoadParams(ContainerUpsertParameters upsertParams)
+    private static ContainerUpsertItemParameters LoadParams(ContainerUpsertItemParameters upsertParams)
     {
         upsertParams.VerboseWriteLine("Reading params from environment variables:");
-        var envParams = new ContainerUpsertParameters();
+        var envParams = new ContainerUpsertItemParameters();
         envParams.ReadParamsFromEnvironment();
         upsertParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
 
@@ -148,9 +128,9 @@ public static class ContainerUpsertCommand
         return envParams;
     }
 
-    private static async Task<ItemResponse<dynamic>> UpsertItemAsync(Container container, JObject jobj, ContainerUpsertParameters upsertParams)
+    private static async Task<ItemResponse<dynamic>> UpsertItemAsync(Container container, JObject jobj, ContainerUpsertItemParameters upsertParams)
     {
-        var partitionKey = GetPartitionKey(upsertParams, jobj);
+        var partitionKey = jobj[upsertParams.PartitionKey].ToString();
         upsertParams.VerboseWriteLine($"ParitionKey: {partitionKey}");
 
         var itemRequestOptions = new ItemRequestOptions
@@ -176,18 +156,9 @@ public static class ContainerUpsertCommand
 
         var upsertedItem = await container.UpsertItemAsync<dynamic>(
             item: jobj,
-            partitionKey: new PartitionKey(partitionKey)
-        //requestOptions: itemRequestOptions
+            partitionKey: new PartitionKey(partitionKey),
+            requestOptions: itemRequestOptions
         );
         return upsertedItem;
-    }
-
-    private static string GetPartitionKey(ContainerUpsertParameters upsertParams, JObject json)
-    {
-        if (!String.IsNullOrWhiteSpace(upsertParams.PartitionKey))
-            return json[upsertParams.PartitionKey].ToString();
-
-        // Assume validation verified that we have a PartitionKey or PartitionKeyValue
-        return upsertParams.PartitionKeyValue;
     }
 }

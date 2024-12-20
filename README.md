@@ -86,17 +86,14 @@ cosmos container upsert --help
 ```
 
 ```text
-Usage: Cosmos upsert [--endpoint <String>] [--key <String>] [--database <String>] [--container <String>] [--verbose] [--compress-json] [--show-response-stats] [--partition-key <String>] [--partition-key-value <String>] [--hide-results] [--consistency-level <String>] [--exclude-region <String>...] [--post-triggers <String>...] [--pre-triggers <String>...] [--session-token <String>] [--help] json-items
+Usage: CosmosCli container upsert [--database <String>] [--container <String>] [--compress-json] [--show-response-stats] [--partition-key <String>] [--partition-key-value <String>] [--hide-results] [--consistency-level <String>] [--exclude-region <String>...] [--post-triggers <String>...] [--pre-triggers <String>...] [--session-token <String>] [--endpoint <String>] [--key <String>] [--verbose] [--help] json-items
 
 Arguments:
   0: json-items
 
 Options:
-  -e, --endpoint <String>               The endpointUri used to connect to the Cosmos DB service
-  -k, --key <String>                    The primary or secondary key used to connect to the Cosmos DB service.
   -d, --database <String>               The name of the database that you are connecting to in Cosmos DB.
   -c, --container <String>              The name of the container that you are connecting to in Cosmos DB.
-  -v, --verbose                         Display more details of what is happening.
   -j, --compress-json                   Compress the json output by removing whitespace and carriage returns.
   -s, --show-response-stats             Show response statistics (including RUs, StatusCode, ContinuationToken).
   -p, --partition-key <String>          Specify the name of the partition key which is provided in the input json.
@@ -107,5 +104,8 @@ Options:
   --post-triggers <String>...           Set the names of the post trigger to be invoked after the upsert.
   --pre-triggers <String>...            Set the names of the pre trigger to be invoked after the upsert.
   -t, --session-token <String>          Set a session token in the query request.
+  -e, --endpoint <String>               The endpointUri used to connect to the Cosmos DB service
+  -k, --key <String>                    The primary or secondary key used to connect to the Cosmos DB service.
+  -v, --verbose                         Display more details of what is happening.
   -h, --help                            Show help message
 ```
