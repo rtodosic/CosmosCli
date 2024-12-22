@@ -2,12 +2,8 @@
 
 namespace CosmosCli.Parameters;
 
-public class DatabaseUpdateParameters : BaseParameters
+public class DatabaseUpdateParameters : DatabaseParameters
 {
-    [Option('d', Description = "The name of the database that you are updating.")]
-    [HasDefaultValue]
-    public string? Database { get; set; }
-
     [Option("autoscale", Description = "(optional) set the number of autoscaled RU/s throughput.")]
     [HasDefaultValue]
     public int? AutoscaleThroughput { get; set; }
@@ -16,28 +12,9 @@ public class DatabaseUpdateParameters : BaseParameters
     [HasDefaultValue]
     public int? ManualThroughput { get; set; }
 
-    public override void Apply(BaseParameters applyParams)
-    {
-        base.Apply(applyParams);
-        if (applyParams is DatabaseUpdateParameters)
-        {
-            var databaseParams = (DatabaseUpdateParameters)applyParams;
-            if (!string.IsNullOrWhiteSpace(databaseParams.Database))
-                this.Database = databaseParams.Database;
-            if (databaseParams.AutoscaleThroughput is not null)
-                this.AutoscaleThroughput = databaseParams.AutoscaleThroughput;
-            if (databaseParams.ManualThroughput is not null)
-                this.ManualThroughput = databaseParams.ManualThroughput;
-        }
-    }
-
     public override void ValidateParams()
     {
         base.ValidateParams();
-        if (string.IsNullOrWhiteSpace(Database))
-        {
-            throw new CommandExitedException("Database must be specified", -15);
-        }
         if (AutoscaleThroughput is not null && ManualThroughput is not null)
         {
             throw new CommandExitedException("Autoscale and Manual throughput can not be both specified at the same time", -15);

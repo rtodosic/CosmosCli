@@ -12,6 +12,7 @@ app.AddSubCommand("account", a =>
 
 app.AddSubCommand("database", a =>
 {
+    a.AddCommand("show", DatabaseShowCommand.Command);
     a.AddCommand("new", DatabaseNewCommand.Command);
     a.AddCommand("update", DatabaseUpdateCommand.Command);
     a.AddCommand("delete", DatabaseDeleteCommand.Command);
@@ -19,6 +20,7 @@ app.AddSubCommand("database", a =>
 
 app.AddSubCommand("container", a =>
 {
+    a.AddCommand("show", ContainerShowCommand.Command);
     a.AddCommand("new", ContainerNewCommand.Command);
     a.AddCommand("delete", ContainerDeleteCommand.Command);
     a.AddCommand("index", ContainerIndexCommand.Command);

@@ -21,12 +21,12 @@ public static class ContainerSelectCommand
         var defaultConsoleColor = Console.ForegroundColor;
         try
         {
-            selectParams = LoadParams(selectParams);
+            selectParams.LoadParams();
             query = LoadQuery(selectParams, query);
 
 
             ValidateQuery(selectParams, query);
-            ValidateParams(selectParams);
+            selectParams.ValidateParams();
 
             try
             {
@@ -135,23 +135,6 @@ public static class ContainerSelectCommand
         return 0;
     }
 
-    private static ContainerSelectParameters LoadParams(ContainerSelectParameters selectParams)
-    {
-        selectParams.VerboseWriteLine("Reading params from environment variables:");
-        var envParams = new ContainerSelectParameters();
-        envParams.ReadParamsFromEnvironment();
-        selectParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-
-        selectParams.VerboseWriteLine("Argument base params:");
-        selectParams.VerboseWriteLine(Utilities.SerializeObject(selectParams));
-
-        envParams.Apply(selectParams);
-        selectParams.VerboseWriteLine("Resolved to the following:");
-        selectParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-
-        return envParams;
-    }
-
     private static string? LoadQuery(ContainerSelectParameters selectParams, string? query)
     {
         if (query != null)
@@ -176,26 +159,5 @@ public static class ContainerSelectCommand
     {
         if (string.IsNullOrWhiteSpace(query))
             throw new CommandExitedException("Please specify a query", -14);
-    }
-
-    private static void ValidateParams(ContainerSelectParameters selectParams)
-    {
-        if (string.IsNullOrWhiteSpace(selectParams.Endpoint))
-        {
-            throw new CommandExitedException("endpoint is required", -10);
-        }
-
-        if (string.IsNullOrWhiteSpace(selectParams.Key))
-        {
-            throw new CommandExitedException(" key is required", -11);
-        }
-        if (string.IsNullOrWhiteSpace(selectParams.Database))
-        {
-            throw new CommandExitedException("Please specify a database", -12);
-        }
-        if (string.IsNullOrWhiteSpace(selectParams.Container))
-        {
-            throw new CommandExitedException("Please specify a container", -13);
-        }
     }
 }

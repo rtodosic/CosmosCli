@@ -2,16 +2,8 @@
 
 namespace CosmosCli.Parameters;
 
-public class ContainerNewParameters : BaseParameters
+public class ContainerNewParameters : ContainerParameters
 {
-    [Option('d', Description = "The name of the database.")]
-    [HasDefaultValue]
-    public string? Database { get; set; }
-
-    [Option('c', Description = "The name of the container that you are creating to in Cosmos DB.")]
-    [HasDefaultValue]
-    public string? Container { get; set; }
-
     [Option('p', Description = "Specify the name of the partition key.")]
     [HasDefaultValue]
     public string PartitionKey { get; set; } = "";
@@ -34,40 +26,9 @@ public class ContainerNewParameters : BaseParameters
     [HasDefaultValue]
     public int? DefaultTimeToLive { get; set; }
 
-    public override void Apply(BaseParameters applyParams)
-    {
-        base.Apply(applyParams);
-        if (applyParams is ContainerNewParameters)
-        {
-            var containerParams = (ContainerNewParameters)applyParams;
-            if (!string.IsNullOrWhiteSpace(containerParams.Database))
-                this.Database = containerParams.Database;
-            if (!string.IsNullOrWhiteSpace(containerParams.Container))
-                this.Container = containerParams.Container;
-            if (!string.IsNullOrEmpty(containerParams.PartitionKey))
-                this.PartitionKey = containerParams.PartitionKey;
-            if (containerParams.AutoscaleThroughput is not null)
-                this.AutoscaleThroughput = containerParams.AutoscaleThroughput;
-            if (containerParams.ManualThroughput is not null)
-                this.ManualThroughput = containerParams.ManualThroughput;
-            if (containerParams.IndexFilename is not null)
-                this.IndexFilename = containerParams.IndexFilename;
-            if (containerParams.DefaultTimeToLive is not null)
-                this.DefaultTimeToLive = containerParams.DefaultTimeToLive;
-        }
-    }
-
     public override void ValidateParams()
     {
         base.ValidateParams();
-        if (string.IsNullOrWhiteSpace(Database))
-        {
-            throw new CommandExitedException("Database must be specified", -15);
-        }
-        if (string.IsNullOrWhiteSpace(Container))
-        {
-            throw new CommandExitedException("Container must be specified", -15);
-        }
         if (string.IsNullOrWhiteSpace(PartitionKey))
         {
             throw new CommandExitedException("PartitionKey must be specified", -15);

@@ -13,7 +13,7 @@ public static class ContainerDeleteCommand
         var defaultConsoleColor = Console.ForegroundColor;
         try
         {
-            containerDeleteParams = LoadParams(containerDeleteParams);
+            containerDeleteParams.LoadParams();
             containerDeleteParams.ValidateParams();
 
             try
@@ -46,21 +46,5 @@ public static class ContainerDeleteCommand
             Console.ForegroundColor = defaultConsoleColor;
         }
         return 0;
-    }
-
-    private static ContainerDeleteParameters LoadParams(ContainerDeleteParameters containerDeleteParams)
-    {
-        containerDeleteParams.VerboseWriteLine("Reading params from environment variables:");
-        var envParams = new ContainerDeleteParameters();
-        envParams.ReadParamsFromEnvironment();
-        containerDeleteParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-
-        containerDeleteParams.VerboseWriteLine("Argument base params:");
-        containerDeleteParams.VerboseWriteLine(Utilities.SerializeObject(containerDeleteParams));
-        envParams.Apply(containerDeleteParams);
-
-        containerDeleteParams.VerboseWriteLine("Resolved to the following:");
-        containerDeleteParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-        return envParams;
     }
 }

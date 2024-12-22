@@ -2,18 +2,8 @@
 
 namespace CosmosCli.Parameters;
 
-public class ContainerUpsertItemParameters : BaseParameters
+public class ContainerUpsertItemParameters : ContainerParameters
 {
-    // Common Params
-
-    [Option('d', Description = "The name of the database that you are connecting to in Cosmos DB.")]
-    [HasDefaultValue]
-    public string? Database { get; set; }
-
-    [Option('c', Description = "The name of the container that you are connecting to in Cosmos DB.")]
-    [HasDefaultValue]
-    public string? Container { get; set; }
-
     // Upsert Commands
     [Option('j', Description = "Compress the json output by removing whitespace and carriage returns.")]
     public bool CompressJson { get; set; }
@@ -51,55 +41,8 @@ public class ContainerUpsertItemParameters : BaseParameters
     [HasDefaultValue]
     public string? SessionToken { get; set; }
 
-    public override void ReadParamsFromEnvironment()
-    {
-        base.ReadParamsFromEnvironment();
-        Database = Environment.GetEnvironmentVariable("COSMOSDB_DATABASE");
-        Container = Environment.GetEnvironmentVariable("COSMOSDB_CONTAINER");
-    }
-
     public override void ValidateParams()
     {
         base.ValidateParams();
-        if (string.IsNullOrWhiteSpace(Database))
-        {
-            throw new CommandExitedException("Please specify a database", -12);
-        }
-        if (string.IsNullOrWhiteSpace(Container))
-        {
-            throw new CommandExitedException("Please specify a container", -13);
-        }
-        if (string.IsNullOrWhiteSpace(PartitionKey))
-        {
-            throw new CommandExitedException("PartitionKey is required", -15);
-        }
-    }
-
-    public override void Apply(BaseParameters applyParams)
-    {
-        base.Apply(applyParams);
-        if (applyParams is ContainerUpsertItemParameters)
-        {
-            var upsertParams = (ContainerUpsertItemParameters)applyParams;
-            if (!string.IsNullOrWhiteSpace(upsertParams.Database))
-                this.Database = upsertParams.Database;
-            if (!string.IsNullOrWhiteSpace(upsertParams.Container))
-                this.Container = upsertParams.Container;
-            this.CompressJson = upsertParams.CompressJson;
-            this.ShowResponseStats = upsertParams.ShowResponseStats;
-            if (!string.IsNullOrWhiteSpace(upsertParams.PartitionKey))
-                this.PartitionKey = upsertParams.PartitionKey;
-            this.HideResults = upsertParams.HideResults;
-            if (upsertParams.ConsistencyLevel is not null)
-                this.ConsistencyLevel = upsertParams.ConsistencyLevel;
-            if (upsertParams.ExcludeRegion is not null)
-                this.ExcludeRegion = upsertParams.ExcludeRegion;
-            if (upsertParams.PostTriggers is not null)
-                this.PostTriggers = upsertParams.PostTriggers;
-            if (upsertParams.PreTriggers is not null)
-                this.PreTriggers = upsertParams.PreTriggers;
-            if (upsertParams.SessionToken is not null)
-                this.SessionToken = upsertParams.SessionToken;
-        }
     }
 }

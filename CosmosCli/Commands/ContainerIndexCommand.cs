@@ -15,7 +15,7 @@ public static class ContainerIndexCommand
         var defaultConsoleColor = Console.ForegroundColor;
         try
         {
-            containerIndexParams = LoadParams(containerIndexParams);
+            containerIndexParams.LoadParams();
             index = LoadIndex(containerIndexParams, index);
 
             containerIndexParams.ValidateParams();
@@ -94,21 +94,5 @@ public static class ContainerIndexCommand
             return indexingPolicy;
         }
         return new IndexingPolicy();
-    }
-
-    private static ContainerIndexParameters LoadParams(ContainerIndexParameters containerIndexParams)
-    {
-        containerIndexParams.VerboseWriteLine("Reading params from environment variables:");
-        var envParams = new ContainerIndexParameters();
-        envParams.ReadParamsFromEnvironment();
-        containerIndexParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-
-        containerIndexParams.VerboseWriteLine("Argument base params:");
-        containerIndexParams.VerboseWriteLine(Utilities.SerializeObject(containerIndexParams));
-        envParams.Apply(containerIndexParams);
-
-        containerIndexParams.VerboseWriteLine("Resolved to the following:");
-        containerIndexParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-        return envParams;
     }
 }

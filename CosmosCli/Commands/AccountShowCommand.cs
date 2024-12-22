@@ -12,12 +12,12 @@ namespace CosmosCli.Commands;
 
 public static class AccountShowCommand
 {
-    public static async Task<int> Command(AccountShowParameters accountParams)
+    public static async Task<int> Command(AccountParameters accountParams)
     {
         var defaultConsoleColor = Console.ForegroundColor;
         try
         {
-            accountParams = LoadParams(accountParams);
+            accountParams.LoadParams();
             accountParams.ValidateParams();
 
             try
@@ -71,21 +71,5 @@ public static class AccountShowCommand
             Console.ForegroundColor = defaultConsoleColor;
         }
         return 0;
-    }
-
-    private static AccountShowParameters LoadParams(AccountShowParameters accountParams)
-    {
-        accountParams.VerboseWriteLine("Reading params from environment variables:");
-        var envParams = new AccountShowParameters();
-        envParams.ReadParamsFromEnvironment();
-        accountParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-
-        accountParams.VerboseWriteLine("Argument base params:");
-        accountParams.VerboseWriteLine(Utilities.SerializeObject(accountParams));
-        envParams.Apply(accountParams);
-
-        accountParams.VerboseWriteLine("Resolved to the following:");
-        accountParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-        return envParams;
     }
 }

@@ -19,7 +19,7 @@ public static class ContainerDeleteItemCommand
         var defaultConsoleColor = Console.ForegroundColor;
         try
         {
-            deleteParams = LoadParams(deleteParams);
+            deleteParams.LoadParams();
             jsonItems = LoadJson(deleteParams, jsonItems);
 
             ValidateJson(deleteParams, jsonItems);
@@ -100,23 +100,6 @@ public static class ContainerDeleteItemCommand
     private static string? LoadJson(ContainerDeleteItemParameters deleteParams, string? jsonItems)
     {
         return Utilities.ReadFromPipeIfNull(jsonItems);
-    }
-
-    private static ContainerDeleteItemParameters LoadParams(ContainerDeleteItemParameters deleteParams)
-    {
-        deleteParams.VerboseWriteLine("Reading params from environment variables:");
-        var envParams = new ContainerDeleteItemParameters();
-        envParams.ReadParamsFromEnvironment();
-        deleteParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-
-        deleteParams.VerboseWriteLine("Argument base params:");
-        deleteParams.VerboseWriteLine(Utilities.SerializeObject(deleteParams));
-
-        envParams.Apply(deleteParams);
-        deleteParams.VerboseWriteLine("Resolved to the following:");
-        deleteParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-
-        return envParams;
     }
 
     private static async Task<ItemResponse<dynamic>> DeleteItemAsync(Container container, JObject jobj, ContainerDeleteItemParameters deleteParams)

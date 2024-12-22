@@ -13,7 +13,7 @@ public static class DatabaseDeleteCommand
         var defaultConsoleColor = Console.ForegroundColor;
         try
         {
-            databaseDeleteParams = LoadParams(databaseDeleteParams);
+            databaseDeleteParams.LoadParams();
             databaseDeleteParams.ValidateParams();
 
             try
@@ -42,21 +42,5 @@ public static class DatabaseDeleteCommand
             Console.ForegroundColor = defaultConsoleColor;
         }
         return 0;
-    }
-
-    private static DatabaseDeleteParameters LoadParams(DatabaseDeleteParameters databaseDeleteParams)
-    {
-        databaseDeleteParams.VerboseWriteLine("Reading params from environment variables:");
-        var envParams = new DatabaseDeleteParameters();
-        envParams.ReadParamsFromEnvironment();
-        databaseDeleteParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-
-        databaseDeleteParams.VerboseWriteLine("Argument base params:");
-        databaseDeleteParams.VerboseWriteLine(Utilities.SerializeObject(databaseDeleteParams));
-        envParams.Apply(databaseDeleteParams);
-
-        databaseDeleteParams.VerboseWriteLine("Resolved to the following:");
-        databaseDeleteParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-        return envParams;
     }
 }

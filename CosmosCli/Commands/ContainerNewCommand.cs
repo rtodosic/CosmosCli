@@ -15,7 +15,7 @@ public static class ContainerNewCommand
         var defaultConsoleColor = Console.ForegroundColor;
         try
         {
-            containerNewParams = LoadParams(containerNewParams);
+            containerNewParams.LoadParams();
             containerNewParams.ValidateParams();
 
             try
@@ -110,21 +110,5 @@ public static class ContainerNewCommand
             return indexingPolicy;
         }
         return new IndexingPolicy();
-    }
-
-    private static ContainerNewParameters LoadParams(ContainerNewParameters containerNewParams)
-    {
-        containerNewParams.VerboseWriteLine("Reading params from environment variables:");
-        var envParams = new ContainerNewParameters();
-        envParams.ReadParamsFromEnvironment();
-        containerNewParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-
-        containerNewParams.VerboseWriteLine("Argument base params:");
-        containerNewParams.VerboseWriteLine(Utilities.SerializeObject(containerNewParams));
-        envParams.Apply(containerNewParams);
-
-        containerNewParams.VerboseWriteLine("Resolved to the following:");
-        containerNewParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-        return envParams;
     }
 }

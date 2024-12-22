@@ -13,7 +13,7 @@ public static class DatabaseNewCommand
         var defaultConsoleColor = Console.ForegroundColor;
         try
         {
-            databaseNewParams = LoadParams(databaseNewParams);
+            databaseNewParams.LoadParams();
             databaseNewParams.ValidateParams();
 
             try
@@ -56,21 +56,5 @@ public static class DatabaseNewCommand
             Console.ForegroundColor = defaultConsoleColor;
         }
         return 0;
-    }
-
-    private static DatabaseNewParameters LoadParams(DatabaseNewParameters databaseNewParams)
-    {
-        databaseNewParams.VerboseWriteLine("Reading params from environment variables:");
-        var envParams = new DatabaseNewParameters();
-        envParams.ReadParamsFromEnvironment();
-        databaseNewParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-
-        databaseNewParams.VerboseWriteLine("Argument base params:");
-        databaseNewParams.VerboseWriteLine(Utilities.SerializeObject(databaseNewParams));
-        envParams.Apply(databaseNewParams);
-
-        databaseNewParams.VerboseWriteLine("Resolved to the following:");
-        databaseNewParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-        return envParams;
     }
 }

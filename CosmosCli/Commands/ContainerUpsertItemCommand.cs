@@ -22,7 +22,7 @@ public static class ContainerUpsertItemCommand
         var defaultConsoleColor = Console.ForegroundColor;
         try
         {
-            upsertParams = LoadParams(upsertParams);
+            upsertParams.LoadParams();
             jsonItems = LoadJson(upsertParams, jsonItems);
 
 
@@ -109,23 +109,6 @@ public static class ContainerUpsertItemCommand
     private static string? LoadJson(ContainerUpsertItemParameters upsertParams, string? jsonItems)
     {
         return Utilities.ReadFromPipeIfNull(jsonItems);
-    }
-
-    private static ContainerUpsertItemParameters LoadParams(ContainerUpsertItemParameters upsertParams)
-    {
-        upsertParams.VerboseWriteLine("Reading params from environment variables:");
-        var envParams = new ContainerUpsertItemParameters();
-        envParams.ReadParamsFromEnvironment();
-        upsertParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-
-        upsertParams.VerboseWriteLine("Argument base params:");
-        upsertParams.VerboseWriteLine(Utilities.SerializeObject(upsertParams));
-
-        envParams.Apply(upsertParams);
-        upsertParams.VerboseWriteLine("Resolved to the following:");
-        upsertParams.VerboseWriteLine(Utilities.SerializeObject(envParams));
-
-        return envParams;
     }
 
     private static async Task<ItemResponse<dynamic>> UpsertItemAsync(Container container, JObject jobj, ContainerUpsertItemParameters upsertParams)
