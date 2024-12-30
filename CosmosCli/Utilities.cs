@@ -3,6 +3,7 @@
 using Microsoft.Azure.Cosmos;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CosmosCli;
 
@@ -39,40 +40,37 @@ public static class Utilities
         return param;
     }
 
-    public static StringBuilder FeedResponseOutput(int count, FeedResponse<dynamic> response)
+    public static JObject FeedResponseJson(int count, FeedResponse<dynamic> response)
     {
-        var sb = new StringBuilder();
-        sb.AppendLine("===============================================================================");
-        sb.AppendLine($" Enumeration {count}");
-        sb.AppendLine("===============================================================================");
-        sb.AppendLine($" RequestCharge: {response.RequestCharge}");
-        sb.AppendLine($" Count: {response.Count}");
-        sb.AppendLine($" StatusCode: {response.StatusCode}");
-        sb.AppendLine($" ActivityId: {response.ActivityId}");
-        sb.AppendLine($" ContinuationToken: {response.ContinuationToken}");
-        sb.AppendLine($" ETag: {response.ETag}");
-        //Console.WriteLine("Headers: " + response.Headers);
-        //Console.WriteLine("Diagnostics: " + response.Diagnostics);
-
-        sb.AppendLine();
-        return sb;
+        var jsonObject = new JObject();
+        jsonObject["Enumeration"] = count;
+        if (!string.IsNullOrWhiteSpace(response.ActivityId))
+            jsonObject["ActivityId"] = response.ActivityId;
+        jsonObject["Count"] = response.Count;
+        //jsonObject["Diagnostics"] = JsonConvert.SerializeObject(response.Diagnostics);
+        //jsonObject["Headers"] = JsonConvert.SerializeObject(response.Headers);
+        jsonObject["RequestCharge"] = response.RequestCharge;
+        jsonObject["StatusCode"] = response.StatusCode.ToString();
+        if (!string.IsNullOrWhiteSpace(response.ETag))
+            jsonObject["ETag"] = response.ETag;
+        if (!string.IsNullOrWhiteSpace(response.ContinuationToken))
+            jsonObject["ContinuationToken"] = response.ContinuationToken;
+        return jsonObject;
     }
 
-    public static StringBuilder ItemResponseOutput(int count, ItemResponse<dynamic> response)
+    public static JObject ItemResponseJson(int count, ItemResponse<dynamic> response)
     {
-        var sb = new StringBuilder();
-        sb.AppendLine("===============================================================================");
-        sb.AppendLine($" json {count}");
-        sb.AppendLine("===============================================================================");
-        sb.AppendLine($" RequestCharge: {response.RequestCharge}");
-        sb.AppendLine($" StatusCode: {response.StatusCode}");
-        sb.AppendLine($" ActivityId: {response.ActivityId}");
-        sb.AppendLine($" ETag: {response.ETag}");
-        //Console.WriteLine("Headers: " + response.Headers);
-        //Console.WriteLine("Diagnostics: " + response.Diagnostics);
-
-        sb.AppendLine();
-        return sb;
+        var jsonObject = new JObject();
+        jsonObject["Item"] = count;
+        if (!string.IsNullOrWhiteSpace(response.ActivityId))
+            jsonObject["ActivityId"] = response.ActivityId;
+        //jsonObject["Diagnostics"] = JsonConvert.SerializeObject(response.Diagnostics);
+        //jsonObject["Headers"] = JsonConvert.SerializeObject(response.Headers);
+        jsonObject["RequestCharge"] = response.RequestCharge;
+        jsonObject["StatusCode"] = response.StatusCode.ToString();
+        if (!string.IsNullOrWhiteSpace(response.ETag))
+            jsonObject["ETag"] = response.ETag;
+        return jsonObject;
     }
 
     public static ConsistencyLevel? ConvertToConsistencyLevel(string? consistencyLevel)

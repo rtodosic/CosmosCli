@@ -76,8 +76,7 @@ public static class ContainerNewCommand
                           //TimeToLivePropertyPath
                           //UniqueKeyPolicy
                           //VectorEmbeddingPolicy
-                      },
-                      ThroughputProperties.CreateManualThroughput(containerNewParams.ManualThroughput ?? 0))
+                      })
                 };
 
                 Utilities.WriteLine($"Container {container.Id} exists");

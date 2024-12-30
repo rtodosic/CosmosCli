@@ -12,9 +12,9 @@ public class ContainerSelectParameters : ContainerParameters
     public bool CompressJson { get; set; }
 
     [Option('s', Description = "Show response statistics (including RUs, StatusCode, ContinuationToken).")]
-    public bool ShowResponseStats { get; set; }
+    public bool ShowStats { get; set; }
 
-    [Option('p', Description = "The maximum number of enumerations (Default is 1).")]
+    [Option('i', Description = "The maximum number of enumerations (Default is 1).")]
     [HasDefaultValue]
     public int MaxEnumerations { get; set; } = 1;
 
@@ -39,9 +39,9 @@ public class ContainerSelectParameters : ContainerParameters
     [HasDefaultValue]
     public string[]? ExcludeRegion { get; set; }
 
-    [Option('i', Description = "The maximum of items in an enumeration")]
+    [Option('n', Description = "The maximum of items in an enumeration")]
     [HasDefaultValue]
-    public int? MaxItemCount { get; set; }
+    public int? MaxItems { get; set; }
 
     [Option('m', Description = "Obtain which existing indexes where used and potential new indexes")]
     [HasDefaultValue]
@@ -51,7 +51,7 @@ public class ContainerSelectParameters : ContainerParameters
     [HasDefaultValue]
     public int? ResponseContinuationTokenLimitInKb { get; set; }
 
-    [Option('t', Description = "Set a session token in the query request.")]
+    [Option("SessionToken", Description = "Set a session token in the query request.")]
     [HasDefaultValue]
     public string? SessionToken { get; set; }
 

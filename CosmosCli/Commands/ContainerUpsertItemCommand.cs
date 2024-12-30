@@ -2,8 +2,6 @@
 // Ignore Spelling: upsert
 // Ignore Spelling: upserted
 
-using System.Text;
-
 using Cocona;
 
 using CosmosCli.Parameters;
@@ -39,7 +37,7 @@ public static class ContainerUpsertItemCommand
                 Container container = database.GetContainer(upsertParams.Container);
 
                 dynamic json;
-                var responseStatsList = new List<StringBuilder>();
+                var responseStats = new JArray();
                 if (jsonItems!.Trim().StartsWith("["))
                 {
                     json = JArray.Parse(jsonItems);
@@ -52,10 +50,10 @@ public static class ContainerUpsertItemCommand
                         var upsertedItem = await UpsertItemAsync(container, jobj, upsertParams);
                         jsonArray.Add(upsertedItem.Resource);
 
-                        if (upsertParams.ShowResponseStats)
-                            responseStatsList.Add(Utilities.ItemResponseOutput(count, upsertedItem));
+                        if (upsertParams.ShowStats)
+                            responseStats.Add(Utilities.ItemResponseJson(count, upsertedItem));
                     }
-                    if (!upsertParams.HideResults)
+                    if (!upsertParams.ShowStats)
                         Utilities.WriteLine(jsonArray.ToString(upsertParams.CompressJson ? Formatting.None : Formatting.Indented));
                 }
                 else if (jsonItems.Trim().StartsWith("{"))
@@ -64,10 +62,9 @@ public static class ContainerUpsertItemCommand
                     upsertParams.VerboseWriteLine("Upsert json...");
                     var upsertedItem = await UpsertItemAsync(container, json, upsertParams);
 
-                    if (upsertParams.ShowResponseStats)
-                        responseStatsList.Add(Utilities.ItemResponseOutput(1, upsertedItem));
-
-                    if (!upsertParams.HideResults)
+                    if (upsertParams.ShowStats)
+                        responseStats.Add(Utilities.ItemResponseJson(1, upsertedItem));
+                    else
                         Utilities.WriteLine(upsertedItem.Resource.ToString(upsertParams.CompressJson ? Formatting.None : Formatting.Indented));
                 }
                 else
@@ -75,11 +72,9 @@ public static class ContainerUpsertItemCommand
                     throw new CommandExitedException("Invalid JSON", -14);
                 }
 
-                if (upsertParams.ShowResponseStats)
+                if (upsertParams.ShowStats)
                 {
-                    Utilities.WriteLine("");
-                    foreach (var sb in responseStatsList)
-                        Utilities.WriteLine(sb.ToString());
+                    Utilities.WriteLine(responseStats.ToString());
                 }
             }
             catch (Exception ex)

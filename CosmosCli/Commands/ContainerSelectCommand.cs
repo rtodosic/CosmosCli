@@ -1,7 +1,5 @@
 ﻿// Ignore Spelling: app
 
-using System.Text;
-
 using Cocona;
 
 using CosmosCli.Parameters;
@@ -31,7 +29,7 @@ public static class ContainerSelectCommand
             try
             {
                 selectParams.VerboseWriteLine("Connecting to the Cosmos DB...");
-                var client = new CosmosClient(selectParams.Key);
+                var client = new CosmosClient(selectParams.Endpoint, selectParams.Key);
                 selectParams.VerboseWriteLine($"Get Database ({selectParams.Database})...");
                 Database database = await client.CreateDatabaseIfNotExistsAsync(selectParams.Database);
 
@@ -52,7 +50,7 @@ public static class ContainerSelectCommand
                     //IfMatchEtag
                     //IfNoneMatchEtag
                     //MaxBufferedItemCount
-                    MaxItemCount = selectParams.MaxItemCount,
+                    MaxItemCount = selectParams.MaxItems,
                     //PartitionKey
                     PopulateIndexMetrics = selectParams.PopulateIndexMetrics,
                     //PriorityLevel
@@ -70,12 +68,14 @@ public static class ContainerSelectCommand
                 selectParams.VerboseWriteLine(Utilities.SerializeObject(selectParams));
 
                 var feedCnt = 0;
-                var responseStatsList = new List<StringBuilder>();
+                var responseStats = new JArray();
+                var metrics = new JArray();
                 JArray jsonArray = new JArray();
                 while (feed.HasMoreResults)
                 {
-                    if (feedCnt > selectParams.MaxEnumerations)
-                        throw new CommandExitedException(-20);
+                    if (feedCnt >= selectParams.MaxEnumerations)
+                        break;
+
                     selectParams.VerboseWriteLine($"Enumeration {feedCnt + 1}...");
                     feedCnt++;
 
@@ -97,25 +97,26 @@ public static class ContainerSelectCommand
                         }
                     }
 
-                    if (selectParams.ShowResponseStats)
-                        responseStatsList.Add(Utilities.FeedResponseOutput(feedCnt, response));
+                    if (selectParams.ShowStats)
+                        responseStats.Add(Utilities.FeedResponseJson(feedCnt, response));
 
                     if (selectParams.PopulateIndexMetrics)
                     {
-                        var sb = new StringBuilder();
-                        sb.AppendLine($"{response.IndexMetrics}");
-                        responseStatsList.Add(sb);
+                        metrics.Add(JObject.Parse(response.IndexMetrics));
                     }
                 }
 
-                Utilities.WriteLine(jsonArray.ToString(selectParams.CompressJson ? Formatting.None : Formatting.Indented));
-
-                if (selectParams.PopulateIndexMetrics || selectParams.ShowResponseStats)
+                if (selectParams.PopulateIndexMetrics)
                 {
-                    Utilities.WriteLine("");
-                    foreach (var sb in responseStatsList)
-                        Utilities.WriteLine(sb.ToString());
+                    Utilities.WriteLine(metrics.ToString());
                 }
+                else if (selectParams.ShowStats)
+                {
+                    Utilities.WriteLine(responseStats.ToString());
+                }
+                else
+                    Utilities.WriteLine(jsonArray.ToString(selectParams.CompressJson ? Formatting.None : Formatting.Indented));
+
             }
             catch (Exception ex)
             {

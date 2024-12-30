@@ -9,15 +9,11 @@ public class ContainerUpsertItemParameters : ContainerParameters
     public bool CompressJson { get; set; }
 
     [Option('s', Description = "Show response statistics (including RUs, StatusCode, ContinuationToken).")]
-    public bool ShowResponseStats { get; set; }
+    public bool ShowStats { get; set; }
 
     [Option('p', Description = "Specify the name of the partition key which is provided in the input json.")]
     [HasDefaultValue]
     public string PartitionKey { get; set; } = "";
-
-    [Option('i', Description = "After upsert don't display the saved items.")]
-    [HasDefaultValue]
-    public bool HideResults { get; set; }
 
     // ItemRequest
     [Option('l', Description = "Consistency Level (Eventual, ConsistentPrefix, Session, BoundedStaleness, Strong)")]
@@ -37,7 +33,7 @@ public class ContainerUpsertItemParameters : ContainerParameters
     [HasDefaultValue]
     public string[]? PreTriggers { get; set; }
 
-    [Option('t', Description = "Set a session token in the query request.")]
+    [Option("SessionToken", Description = "Set a session token in the query request.")]
     [HasDefaultValue]
     public string? SessionToken { get; set; }
 

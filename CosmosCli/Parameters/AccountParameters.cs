@@ -69,16 +69,22 @@ public class AccountParameters : ICommandParameterSet
         {
             if (string.IsNullOrWhiteSpace(Endpoint))
             {
-                Endpoint = ConfigFileJson["Endpoint"].ToString();
-                if (!string.IsNullOrWhiteSpace(Endpoint))
-                    VerboseWriteLine($"Endpoint - loaded from config file: {Endpoint}");
+                if (ConfigFileJson.TryGetValue("Endpoint", out JToken endpointToken))
+                {
+                    Endpoint = endpointToken.ToString();
+                    if (!string.IsNullOrWhiteSpace(Endpoint))
+                        VerboseWriteLine($"Endpoint - loaded from config file: {Endpoint}");
+                }
             }
 
             if (string.IsNullOrWhiteSpace(Key))
             {
-                Key = ConfigFileJson["Key"].ToString();
-                if (!string.IsNullOrWhiteSpace(Key))
-                    VerboseWriteLine($"Key - loaded from config file: {Key}");
+                if (ConfigFileJson.TryGetValue("Key", out JToken keyToken))
+                {
+                    Key = keyToken.ToString();
+                    if (!string.IsNullOrWhiteSpace(Key))
+                        VerboseWriteLine($"Key - loaded from config file: {Key}");
+                }
             }
         }
     }

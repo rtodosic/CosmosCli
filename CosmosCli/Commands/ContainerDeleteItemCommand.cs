@@ -35,7 +35,7 @@ public static class ContainerDeleteItemCommand
                 Container container = database.GetContainer(deleteParams.Container);
 
                 dynamic json;
-                var responseStatsList = new List<StringBuilder>();
+                var responseStats = new JArray();
                 if (jsonItems!.Trim().StartsWith("["))
                 {
                     json = JArray.Parse(jsonItems);
@@ -48,8 +48,8 @@ public static class ContainerDeleteItemCommand
                         var deletedItem = await DeleteItemAsync(container, jobj, deleteParams);
                         jsonArray.Add(deletedItem.Resource);
 
-                        if (deleteParams.ShowResponseStats)
-                            responseStatsList.Add(Utilities.ItemResponseOutput(count, deletedItem));
+                        if (deleteParams.ShowStats)
+                            responseStats.Add(Utilities.ItemResponseJson(count, deletedItem));
                     }
                 }
                 else if (jsonItems.Trim().StartsWith("{"))
@@ -58,20 +58,16 @@ public static class ContainerDeleteItemCommand
                     deleteParams.VerboseWriteLine("Delete json...");
                     var deletedItem = await DeleteItemAsync(container, json, deleteParams);
 
-                    if (deleteParams.ShowResponseStats)
-                        responseStatsList.Add(Utilities.ItemResponseOutput(1, deletedItem));
+                    if (deleteParams.ShowStats)
+                        responseStats.Add(Utilities.ItemResponseJson(1, deletedItem));
                 }
                 else
                 {
                     throw new CommandExitedException("Invalid JSON", -14);
                 }
 
-                if (deleteParams.ShowResponseStats)
-                {
-                    Utilities.WriteLine("");
-                    foreach (var sb in responseStatsList)
-                        Utilities.WriteLine(sb.ToString());
-                }
+                if (deleteParams.ShowStats)
+                    Utilities.WriteLine(responseStats.ToString());
             }
             catch (Exception ex)
             {
@@ -104,7 +100,7 @@ public static class ContainerDeleteItemCommand
 
     private static async Task<ItemResponse<dynamic>> DeleteItemAsync(Container container, JObject jobj, ContainerDeleteItemParameters deleteParams)
     {
-        var id = jobj[deleteParams.Id].ToString();
+        var id = jobj["id"].ToString();
         // TODO: what if the partition key is not a string?
         var partitionKey = jobj[deleteParams.PartitionKey].ToString();
         deleteParams.VerboseWriteLine($"Id: {id}, ParitionKey: {partitionKey}");

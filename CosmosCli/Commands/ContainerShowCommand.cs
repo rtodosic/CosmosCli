@@ -26,12 +26,24 @@ public static class ContainerShowCommand
                 var client = new CosmosClient(containerParams.Endpoint, containerParams.Key);
 
                 Database db = client.GetDatabase(containerParams.Database);
-                Container container = db.GetContainer(containerParams.Container);
 
-                var containerInfo = await container.ReadContainerAsync();
-                JObject jsonObject = JObject.FromObject(containerInfo);
+                QueryDefinition queryDefinition = new QueryDefinition("SELECT * FROM c where c.id = @name")
+                    .WithParameter("@name", containerParams.Container);
 
-                Utilities.WriteLine(jsonObject.ToString());
+                FeedIterator<ContainerProperties> containerIterator = db.GetContainerQueryIterator<ContainerProperties>(queryDefinition);
+
+                while (containerIterator.HasMoreResults)
+                {
+                    foreach (var containerInfo in await containerIterator.ReadNextAsync())
+                    {
+                        JObject jsonObject = JObject.FromObject(containerInfo);
+                        Utilities.WriteLine(jsonObject.ToString());
+                        return 0;
+                    }
+                }
+
+                Utilities.ErrorWriteLine($"Container {containerParams.Container} not found in database {containerParams.Database}");
+                return -1;
             }
             catch (Exception ex)
             {
@@ -48,6 +60,5 @@ public static class ContainerShowCommand
             Console.Out.Flush();
             Console.ForegroundColor = defaultConsoleColor;
         }
-        return 0;
     }
 }

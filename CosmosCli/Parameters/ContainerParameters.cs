@@ -1,5 +1,7 @@
 ﻿using Cocona;
 
+using Newtonsoft.Json.Linq;
+
 namespace CosmosCli.Parameters;
 
 public class ContainerParameters : DatabaseParameters
@@ -31,11 +33,11 @@ public class ContainerParameters : DatabaseParameters
         }
 
         // Load from config file
-        if (ConfigFileJson is not null)
+        if (ConfigFileJson is not null && string.IsNullOrWhiteSpace(Container))
         {
-            if (string.IsNullOrWhiteSpace(Container))
+            if (ConfigFileJson.TryGetValue("Container", out JToken containerToken))
             {
-                Container = ConfigFileJson["Container"].ToString();
+                Container = containerToken.ToString();
                 if (!string.IsNullOrWhiteSpace(Container))
                     VerboseWriteLine($"Container - loaded from config file: {Container}");
             }
