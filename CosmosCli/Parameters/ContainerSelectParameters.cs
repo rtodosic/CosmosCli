@@ -18,6 +18,11 @@ public class ContainerSelectParameters : ContainerParameters
     [HasDefaultValue]
     public int MaxEnumerations { get; set; } = 1;
 
+    [Option('t', Description = "File that holds the continuation token.")]
+    [HasDefaultValue]
+    public string ContinuationTokenFile { get; set; } = "";
+
+
     // QueryRequestOptions
     [Option('l', Description = "Consistency Level (Eventual, ConsistentPrefix, Session, BoundedStaleness, Strong)")]
     [HasDefaultValue]

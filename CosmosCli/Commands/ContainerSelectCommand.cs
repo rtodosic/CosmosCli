@@ -60,60 +60,66 @@ public static class ContainerSelectCommand
                 };
                 selectParams.VerboseWriteLine(Utilities.SerializeObject(queryRequestOptions));
 
-                using FeedIterator<dynamic> feed = container.GetItemQueryIterator<dynamic>(
-                    queryDefinition: new(query),
-                    requestOptions: queryRequestOptions);
-
-                selectParams.VerboseWriteLine("Processing Results");
-                selectParams.VerboseWriteLine(Utilities.SerializeObject(selectParams));
 
                 var feedCnt = 0;
                 var responseStats = new JArray();
                 var metrics = new JArray();
                 JArray jsonArray = new JArray();
-                while (feed.HasMoreResults)
+
+                var continuationToken = await ReadContinuationTokenAsync(selectParams.ContinuationTokenFile);
+                if (continuationToken == null || !string.IsNullOrWhiteSpace(continuationToken))
                 {
-                    if (feedCnt >= selectParams.MaxEnumerations)
-                        break;
+                    using FeedIterator<dynamic> feed = container.GetItemQueryIterator<dynamic>(
+                        queryDefinition: new(query),
+                        requestOptions: queryRequestOptions,
+                        continuationToken: continuationToken);
 
-                    selectParams.VerboseWriteLine($"Enumeration {feedCnt + 1}...");
-                    feedCnt++;
+                    selectParams.VerboseWriteLine("Processing Results");
+                    selectParams.VerboseWriteLine(Utilities.SerializeObject(selectParams));
 
-                    FeedResponse<dynamic> response = await feed.ReadNextAsync();
-                    foreach (dynamic item in response)
+                    while (feed.HasMoreResults)
                     {
-                        var obj = item as JObject;
-                        if (obj != null)
+                        if (feedCnt >= selectParams.MaxEnumerations)
+                            break;
+
+                        selectParams.VerboseWriteLine($"Enumeration {feedCnt + 1}...");
+                        feedCnt++;
+
+                        FeedResponse<dynamic> response = await feed.ReadNextAsync();
+                        foreach (dynamic item in response)
                         {
-                            if (selectParams.DropSystemProperties)
+                            var obj = item as JObject;
+                            if (obj != null)
                             {
-                                obj.Remove("_rid");
-                                obj.Remove("_attachments");
-                                obj.Remove("_etag");
-                                obj.Remove("_self");
-                                obj.Remove("_ts");
+                                if (selectParams.DropSystemProperties)
+                                {
+                                    obj.Remove("_rid");
+                                    obj.Remove("_attachments");
+                                    obj.Remove("_etag");
+                                    obj.Remove("_self");
+                                    obj.Remove("_ts");
+                                }
+                                jsonArray.Add(obj);
                             }
-                            jsonArray.Add(obj);
                         }
-                    }
 
-                    if (selectParams.ShowStats)
-                        responseStats.Add(Utilities.FeedResponseJson(feedCnt, response));
+                        continuationToken = response.ContinuationToken;
 
-                    if (selectParams.PopulateIndexMetrics)
-                    {
-                        metrics.Add(JObject.Parse(response.IndexMetrics));
+                        if (selectParams.ShowStats)
+                            responseStats.Add(Utilities.FeedResponseJson(feedCnt, response));
+
+                        if (selectParams.PopulateIndexMetrics)
+                            metrics.Add(JObject.Parse(response.IndexMetrics));
                     }
                 }
+
+                if (!string.IsNullOrWhiteSpace(selectParams.ContinuationTokenFile))
+                    SaveContinuationToken(selectParams.ContinuationTokenFile, continuationToken);
 
                 if (selectParams.PopulateIndexMetrics)
-                {
                     Utilities.WriteLine(metrics.ToString());
-                }
                 else if (selectParams.ShowStats)
-                {
                     Utilities.WriteLine(responseStats.ToString());
-                }
                 else
                     Utilities.WriteLine(jsonArray.ToString(selectParams.CompressJson ? Formatting.None : Formatting.Indented));
 
@@ -134,6 +140,25 @@ public static class ContainerSelectCommand
             Console.ForegroundColor = defaultConsoleColor;
         }
         return 0;
+    }
+
+
+    private static async Task<string?> ReadContinuationTokenAsync(string continuationTokenFile)
+    {
+        if (string.IsNullOrWhiteSpace(continuationTokenFile))
+            return null;
+
+        if (!File.Exists(continuationTokenFile))
+            return null;
+
+        using var readFile = new StreamReader(continuationTokenFile);
+        return await readFile.ReadToEndAsync();
+    }
+
+    private static void SaveContinuationToken(string continuationTokenFile, string? continuationToken)
+    {
+        using var outputFile = new StreamWriter(continuationTokenFile, false);
+        outputFile.Write(continuationToken ?? "");
     }
 
     private static string? LoadQuery(ContainerSelectParameters selectParams, string? query)

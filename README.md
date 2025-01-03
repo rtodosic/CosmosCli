@@ -352,6 +352,16 @@ The query can also be piped into the command as follows:
 cat query.txt | cosmos container select -d TestDB -c Container1 
 ```
 
+When a query returns more data than can be processed at once, a continuation token file can be used to run a query again 
+and return items for where it left off. The following will return the first 100 items it the first command and the
+next 100 items in the second command. The specified file should not exist on the first call. The last call will set the
+value in the file to an empty string. Running the command once the file contains a empty value will return and 
+empty JSON array. Delete the file or specify a different file name to start querying from the beginning. 
+
+```bash
+cosmos container select -d TestDB -c Container1 -t continuationToken.txt "Select * from c"
+cosmos container select -d TestDB -c Container1 -t continuationToken.txt "Select * from c"
+```
 
 ## Container Upsert Item
 This is used to update or insert documents into a container in a Cosmos database.
