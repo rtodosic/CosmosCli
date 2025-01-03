@@ -11,9 +11,9 @@ using Newtonsoft.Json.Linq;
 
 namespace CosmosCli.Commands;
 
-public static class ContainerSelectCommand
+public static class ContainerSelectItemCommand
 {
-    public static async Task<int> Command(ContainerSelectParameters selectParams, [Argument] string? query = null)
+    public static async Task<int> Command(ContainerSelectItemParameters selectParams, [Argument] string? query = null)
     {
 
         var defaultConsoleColor = Console.ForegroundColor;
@@ -161,7 +161,7 @@ public static class ContainerSelectCommand
         outputFile.Write(continuationToken ?? "");
     }
 
-    private static string? LoadQuery(ContainerSelectParameters selectParams, string? query)
+    private static string? LoadQuery(ContainerSelectItemParameters selectParams, string? query)
     {
         if (query != null)
         {
@@ -181,7 +181,7 @@ public static class ContainerSelectCommand
         return query;
     }
 
-    private static void ValidateQuery(ContainerSelectParameters selectParams, string? query)
+    private static void ValidateQuery(ContainerSelectItemParameters selectParams, string? query)
     {
         if (string.IsNullOrWhiteSpace(query))
             throw new CommandExitedException("Please specify a query", -14);

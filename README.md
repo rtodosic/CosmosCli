@@ -69,7 +69,7 @@ Commands:
   new
   delete
   index
-  select
+  select-item
   upsert-item
   delete-item
 
@@ -145,7 +145,7 @@ Sample config.json file:
     - [new](#container-new)
     - [delete](#container-delete)
     - [index](#container-index)
-    - [select](#container-select)
+    - [select](#container-select-item)
     - [upsert-item](#container-upsert-item)
     - [delete-item](#container-delete-item)
 
@@ -313,43 +313,43 @@ You can also pipe the index into the container index command.
 cat c:\index.json | cosmos container index -d TestDB -c Container1 "c:\index.json"
 ```
 
-## Container Select
+## Container Select Item
 This is used to select data from a container in a Cosmos database.
 
 The following selected data from a container. Like the Azure portal, by default only the first 100 documents will be returned.
 
 ```bash
-cosmos container select -d TestDB -c Container1 "Select * from c"
+cosmos container select-item -d TestDB -c Container1 "Select * from c"
 ```
 
 The default max items returned is 100 with 1 enumeration. However, the max items returned can be changed along with the number of  enumerations. The following returns 200 items at a time and allows for 5 enumerations which will return up to 1000 items.
 
 ```bash
-cosmos container select -d TestDB -c Container1 -n 200 -i 5 "Select * from c"
+cosmos container select-item -d TestDB -c Container1 -n 200 -i 5 "Select * from c"
 ```
 
 The following displays the RU charges, count, status code, activity id and continuation token per enumeration. This is printed out after the documents have been displayed. 
 
 ```bash
-cosmos container select -d TestDB -c Container1 -s "Select * from c"
+cosmos container select-item -d TestDB -c Container1 -s "Select * from c"
 ```
 
 The following displays information about utilized indexes as well as suggests potential indexes that should be added. The selected documents will not be displayed.
 
 ```bash
-cosmos container select -d TestDB -c Container1 -m "Select * from c order by c.name"
+cosmos container select-item -d TestDB -c Container1 -m "Select * from c order by c.name"
 ```
 
 The system generated properties (_rid, _self, _etag, _attachments, and _ts) can be removed by doing the following:
 
 ```bash
-cosmos container select -d TestDB -c Container1 -_ "Select * from c order by c.name"
+cosmos container select-item -d TestDB -c Container1 -_ "Select * from c order by c.name"
 ```
 
 The query can also be piped into the command as follows:
 
 ```bash
-cat query.txt | cosmos container select -d TestDB -c Container1 
+cat query.txt | cosmos container select-item -d TestDB -c Container1 
 ```
 
 When a query returns more data than can be processed at once, a continuation token file can be used to run a query again 
@@ -359,8 +359,8 @@ value in the file to an empty string. Running the command once the file contains
 empty JSON array. Delete the file or specify a different file name to start querying from the beginning. 
 
 ```bash
-cosmos container select -d TestDB -c Container1 -t continuationToken.txt "Select * from c"
-cosmos container select -d TestDB -c Container1 -t continuationToken.txt "Select * from c"
+cosmos container select-item -d TestDB -c Container1 -t continuationToken.txt "Select * from c"
+cosmos container select-item -d TestDB -c Container1 -t continuationToken.txt "Select * from c"
 ```
 
 ## Container Upsert Item
