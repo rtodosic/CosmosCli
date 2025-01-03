@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.3.0"></a>
+## [0.3.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.3.0) (2025-01-03)
+
+### Features
+
+* added a continuation token file option to container select ([4bc2b5b](https://www.github.com/rtodosic/CosmosCli/commit/4bc2b5bd4ecf1ebd2567a6a4221e503364e6aee2))
+
 <a name="0.2.0"></a>
 ## [0.2.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.2.0) (2024-12-30)
 
