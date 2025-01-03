@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.4.0"></a>
+## [0.4.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.4.0) (2025-01-03)
+
+### Features
+
+* renamed 'container select' to 'cointainer select-item' ([722c4ed](https://www.github.com/rtodosic/CosmosCli/commit/722c4ede4a71ea2a2e266742ae4893882e7e31ab))
+
 <a name="0.3.0"></a>
 ## [0.3.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.3.0) (2025-01-03)
 
