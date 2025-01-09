@@ -10,6 +10,8 @@ Select -> Transform -> Upsert
 1. Transform the json documents using [jq](https://jqlang.github.io/jq)
 1. Upsert the json documents back into Cosmos DB
 
+[Sample script to add a property](#sample-script-to-add-a-property)
+
 
 ## Installation
 Make sure you have [.Net 8 or higher installed](https://dotnet.microsoft.com/en-us/download). 
@@ -412,6 +414,48 @@ The following displays RU charges, status code, activity id, and etag of the ite
 ```bash
 cosmos container delete-item  -d TestDB -c Container1 -s -p id '[{\"id\":\"7\",\"name\":\"Bob\"},{\"id\":\"8\",\"name\":\"Bill\"}]'   
 ```
+
+## Sample script to add a property
+
+The following adds a **discount** property with a value of **0.02** to all the documents in a container. Note that the 
+endpoint and key have been removed to make it shorter.   
+
+```powershell
+while (-not (Test-Path .\continuationToken.txt) -or (Get-Item .\continuationToken.txt).Length -ne 0) {
+    $r = cosmos container select-item -d cosmicworks -c products -_ -t continuationToken.txt "Select * from c" |  jq '[.[] | .discount = 0.02]' | cosmos container upsert-item -d cosmicworks -c products -p categoryId
+    Write-Output "Working..."
+} 
+Write-Output "Done"
+```
+
+This script loops until there is a **continuationToken.txt** file that is empty. The **continuationToken.txt** is created as part of the **cosmos container select-item** command by specifying the continuation token file. The main part of the script does the following:
+   select -> transform -> upsert
+
+The select-item is used to query the items in a container. 
+
+```bash
+cosmos container select-item -d cosmicworks -c products -_ -t continuationToken.txt "Select * from c"
+```
+
+The results of the select-item are piped to jq. Which destructs the items, add the discount property with a hardcoded value and wraps the results into and array. 
+```bash
+jq '[.[] | .discount = 0.02]'
+```
+
+The results of jq are piped into the upsert-item. The database and container are the same as the select which will update the same document items that have been where selected. It this example the contain has a **categoryId** partition key.
+```bash
+ cosmos container upsert-item -d cosmicworks -c products -p categoryId
+```
+
+The result of the upsert are captured in the **$r** variable which could be used to output the updated documents to the console.
+
+Tip: jq can also be used to do multiply the price by 0.02 and append text to a name as follows:  
+
+```bash
+jq '. | map(.price*=0.02) | map(.name+=\" - test\")'
+```
+
+💭 Hope this gives you some ideas as to what you might be able to do with this commands. 
 
 
 
