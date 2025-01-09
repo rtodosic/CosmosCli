@@ -13,6 +13,7 @@ Select -> Transform -> Upsert
 Sample Scripts
 * [Add a property](#sample-script-to-add-a-property)
 * [Update properties](#sample-script-to-update-properties)
+* [Remove a property](#sample-script-to-remove-a-property)
 
 ## Installation
 Make sure you have [.Net 8 or higher installed](https://dotnet.microsoft.com/en-us/download). 
@@ -475,6 +476,40 @@ cosmos container select-item -d cosmicworks -c products -_ -t continuationToken.
 The results of the **select-item** are piped to **jq** which is destructed and the **price** is multiplied by 0.02 and **" - test"** is appended to the end of the **name** property. 
 ```bash
 jq '. | map(.price*=0.02) | map(.name+=\" - test\")'
+```
+
+The results of **jq** are piped into the **upsert-item**. The database and container are the same as was used in the **select-item** command which will result in the same documents being updated. In this example, the container has a **categoryId** partition key.
+```bash
+ cosmos container upsert-item -d cosmicworks -c products -p categoryId
+```
+
+The result of the upsert are captured in the **$r** variable which could be used to output the updated documents to the console.
+
+
+## Sample Script to Remove a Property
+
+The following is a PowerShell script which removes a **discount** property from all the documents in a container. Note that the endpoint and key have been removed to make it shorter.   
+
+```powershell
+while (-not (Test-Path .\continuationToken.txt) -or (Get-Item .\continuationToken.txt).Length -ne 0) {
+    $r = cosmos container select-item -d cosmicworks -c products -_ -t continuationToken.txt "Select * from c" |  jq '. | map(del(.discount))' | cosmos container upsert-item -d cosmicworks -c products -p categoryId
+    Write-Output "Working..."
+} 
+Write-Output "Done"
+```
+
+This script loops until there is a **continuationToken.txt** file that is empty. The **continuationToken.txt** is created as part of the **cosmos container select-item** command by specifying the continuation token file. The main part of the script does the following:
+   select -> transform -> upsert
+
+The **select-item** is used to query the items in a container. 
+
+```bash
+cosmos container select-item -d cosmicworks -c products -_ -t continuationToken.txt "Select * from c"
+```
+
+The results of the **select-item** are piped to **jq** which deletes the **discount** property from each of the JSON items in the array. 
+```bash
+ jq '. | map(del(.discount))'
 ```
 
 The results of **jq** are piped into the **upsert-item**. The database and container are the same as was used in the **select-item** command which will result in the same documents being updated. In this example, the container has a **categoryId** partition key.
