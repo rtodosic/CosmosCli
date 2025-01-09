@@ -10,8 +10,9 @@ Select -> Transform -> Upsert
 1. Transform the json documents using [jq](https://jqlang.github.io/jq)
 1. Upsert the json documents back into Cosmos DB using [upsert-item](#container-upsert-item)
 
-[Sample script to add a property](#sample-script-to-add-a-property)
-[Sample script to update properties](#sample-script-to-update-properties)
+Sample Scripts
+* [Add a property](#sample-script-to-add-a-property)
+* [Update properties](#sample-script-to-update-properties)
 
 ## Installation
 Make sure you have [.Net 8 or higher installed](https://dotnet.microsoft.com/en-us/download). 
@@ -19,9 +20,8 @@ Open a terminal and run the following:
 
 ```bash
 dotnet tool install --global CosmosCli
-```
-
-To make sure it is installed run the following:
+```* 
+* To make sure it is installed run the following:
 ```bash
 cosmos --version
 ```
@@ -55,7 +55,7 @@ Options:
   --version     Show version
 ```
 
-Each of the commands have **sub-commands**. To view more detail, use **--help** on the commands.  
+Each of the commands have **sub-commands**. To view more details, use **--help** on the commands.  
 
 ```bash
 cosmos container --help
@@ -108,7 +108,7 @@ Options:
   -h, --help                          Show help message
 ```
 ## Environment Variables
-You can specify the **endpoint**, **key**, **database** and **container* as environment variables. If you specify them as part of the command then the environment variables will be ignored.
+You can specify the **endpoint**, **key**, **database** and **container** as environment variables. If you specify them as part of the command then the environment variables will be ignored.
 
 You can set the following environment variables:
 ```
@@ -202,7 +202,7 @@ The following creates a database named **TestDB** without specifying any through
 cosmos database new -d TestDB
 ```
 
-The following creates a database with autoscaling RU/s. The value must be 1000 and 1,000,000 RU/s and the output message will say that the RU/s is 10% of what you specified.
+The following creates a database with autoscaling RU/s. The value must be between 1000 and 1,000,000 RU/s and the output message will say that the RU/s is 10% of what you specified.
 
 ```bash
 cosmos database new -d TestDB --autoscale 1000
@@ -218,7 +218,7 @@ cosmos database new -d TestDB --manual 400
 This updates the RU/s on an existing database. If the database was not created with manual or autoscaled RU/s this command will fail. The database must have RU/s specified.
 
 
-The following will change the autoscaled throughput to 2000. The value must be 1000 and 1,000,000 RU/s and the output message will say that the RU/s is 10% of what you specified.
+The following will change the autoscaled throughput to 2000. The value must be between 1000 and 1,000,000 RU/s and the output message will say that the RU/s is 10% of what you specified.
 ```bash
 cosmos database new -d TestDB --autoscale 2000 
 ```
@@ -264,7 +264,7 @@ This creates a new container in a Cosmos database. The partition key must be spe
 cosmos container new -d TestDB -c Container1 -p id
 ```
 
-The following creates a container with autoscaling RU/s. The value must be 1000 and 1,000,000 RU/s and the output message will say that the RU/s is 10% of what you specified.
+The following creates a container with autoscaling RU/s. The value must be between 1000 and 1,000,000 RU/s and the output message will say that the RU/s is 10% of what you specified.
 
 ```bash
 cosmos container new -d TestDB -c Container1 -p id --autoscale 1000 
@@ -330,13 +330,13 @@ The default max items returned is 100 with 1 enumeration. However, the max items
 cosmos container select-item -d TestDB -c Container1 -n 200 -i 5 "Select * from c"
 ```
 
-The following displays the RU charges, count, status code, activity id and continuation token per enumeration. This is printed out after the documents have been displayed. 
+The following displays the RU charges, count, status code, activity id and continuation token per enumeration.
 
 ```bash
 cosmos container select-item -d TestDB -c Container1 -s "Select * from c"
 ```
 
-The following displays information about utilized indexes as well as suggests potential indexes that should be added. The selected documents will not be displayed.
+The following displays information about utilized indexes as well as suggests potential indexes that should be added. 
 
 ```bash
 cosmos container select-item -d TestDB -c Container1 -m "Select * from c order by c.name"
@@ -436,7 +436,7 @@ The **select-item** is used to query the items in a container.
 cosmos container select-item -d cosmicworks -c products -_ -t continuationToken.txt "Select * from c"
 ```
 
-The results of the **select-item** are piped to **jq**. Which is destructs and the **discount** property is added with a hardcoded value and the items are then wraps into an array. 
+The results of the **select-item** are piped to **jq** which is destructed and the **discount** property is added with a hardcoded value and the items are then wrapped into an array. 
 ```bash
 jq '[.[] | .discount = 0.02]'
 ```
@@ -452,7 +452,7 @@ The result of the upsert are captured in the **$r** variable which could be used
 ## Sample script to update properties
 
 
-The following is a PowerShell script to update a **price** property and the **name** property of to all the documents in a container. Note that the endpoint and key have been removed to make it shorter.   
+The following is a PowerShell script to update a **price** property and the **name** property of all the documents in a container. Note that the endpoint and key have been removed to make it shorter.   
 
 ```powershell
 while (-not (Test-Path .\continuationToken.txt) -or (Get-Item .\continuationToken.txt).Length -ne 0) {
@@ -471,7 +471,7 @@ The **select-item** is used to query the items in a container.
 cosmos container select-item -d cosmicworks -c products -_ -t continuationToken.txt "Select * from c"
 ```
 
-The results of the **select-item** are piped to **jq**. Which is destructs the items and multiples the **price** by 0.02 and appends **" - test"** to the end of the **name** property. 
+The results of the **select-item** are piped to **jq** which is destructed and the **price** is multiplied by 0.02 and **" - test"** is appended to the end of the **name** property. 
 ```bash
 jq '. | map(.price*=0.02) | map(.name+=\" - test\")'
 ```
