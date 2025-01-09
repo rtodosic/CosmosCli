@@ -20,8 +20,9 @@ Open a terminal and run the following:
 
 ```bash
 dotnet tool install --global CosmosCli
-```* 
-* To make sure it is installed run the following:
+```
+
+To make sure it is installed run the following:
 ```bash
 cosmos --version
 ```
@@ -371,24 +372,24 @@ This is used to update or insert documents into a container in a Cosmos database
 
 The following will upsert a single document in a container. Note that the partition key property must be specified and be in the JSON.
 ```bash
-cosmos container upsert-item  -d TestDB -c Container1 -p id '{\"id\":\"7\",\"name\":\"Bob\"}'   
+cosmos container upsert-item -d TestDB -c Container1 -p id '{\"id\":\"7\",\"name\":\"Bob\"}'   
 ```
 
 The following will upsert multiple documents in a container. Note that the partition key property must be specified and be in the JSON.
 ```bash
-cosmos container upsert-item  -d TestDB -c Container1 -p id '[{\"id\":\"7\",\"name\":\"Bob\"},{\"id\":\"8\",\"name\":\"Bill\"}]'   
+cosmos container upsert-item -d TestDB -c Container1 -p id '[{\"id\":\"7\",\"name\":\"Bob\"},{\"id\":\"8\",\"name\":\"Bill\"}]'   
 ```
 
 The following displays RU charges, status code, activity id, and etag of the items.
 ```bash
-cosmos container upsert-item  -d TestDB -c Container1 -s -p id '[{\"id\":\"7\",\"name\":\"Bob\"},{\"id\":\"8\",\"name\":\"Bill\"}]'   
+cosmos container upsert-item -d TestDB -c Container1 -s -p id '[{\"id\":\"7\",\"name\":\"Bob\"},{\"id\":\"8\",\"name\":\"Bill\"}]'   
 ```
 
 
 The documents can also be piped into the command as follows:
 
 ```bash
-cat docs.txt | cosmos container upsert-item  -d TestDB -c Container1 -p id
+cat docs.txt | cosmos container upsert-item -d TestDB -c Container1 -p id
 ```
 
 ## Container Delete Item
@@ -397,27 +398,27 @@ This is used to delete documents in a container in a Cosmos database.
 
 The following will delete a single document in a container. Note that the partition key property must be specified and be in the JSON.
 ```bash
-cosmos container delete-item  -d TestDB -c Container1 -p id '{\"id\":\"8\"}'   
+cosmos container delete-item -d TestDB -c Container1 -p id '{\"id\":\"8\"}'   
 ```
 
 The following will delete multiple documents from  a container. Note that the partition key property must be specified and be in the JSON.
 ```bash
-cosmos container delete-item  -d TestDB -c Container1 -p id '[{\"id\":\"7\",\"name\":\"Bob\"},{\"id\":\"8\",\"name\":\"Bill\"}]'   
+cosmos container delete-item -d TestDB -c Container1 -p id '[{\"id\":\"7\",\"name\":\"Bob\"},{\"id\":\"8\",\"name\":\"Bill\"}]'   
 ```
 
 If the partition key is not **id**, both the **id** property and **partition key** must be specified in the JSON.
 ```bash
-cosmos container delete-item  -d TestDB -c Container2 -p pkey '{\"id\":\"11111\",\"pkey\":\"AAAAA\"}'
+cosmos container delete-item -d TestDB -c Container2 -p pkey '{\"id\":\"11111\",\"pkey\":\"AAAAA\"}'
 ``` 
 
 The following displays RU charges, status code, activity id, and etag of the items.
 ```bash
-cosmos container delete-item  -d TestDB -c Container1 -s -p id '[{\"id\":\"7\",\"name\":\"Bob\"},{\"id\":\"8\",\"name\":\"Bill\"}]'   
+cosmos container delete-item -d TestDB -c Container1 -s -p id '[{\"id\":\"7\",\"name\":\"Bob\"},{\"id\":\"8\",\"name\":\"Bill\"}]'   
 ```
 
 ## Sample script to add a property
 
-The following is a PowerShell script to adds a **discount** property with a value of **0.02** to all the documents in a container. Note that the endpoint and key have been removed to make it shorter.   
+The following is a PowerShell script to add a **discount** property with a value of **0.02** to all the documents in a container. Note that the endpoint and key have been removed to make it shorter.   
 
 ```powershell
 while (-not (Test-Path .\continuationToken.txt) -or (Get-Item .\continuationToken.txt).Length -ne 0) {
