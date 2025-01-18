@@ -20,15 +20,20 @@ public static class ContainerDeleteCommand
             {
                 containerDeleteParams.VerboseWriteLine("Connecting to the Cosmos DB...");
                 var client = new CosmosClient(containerDeleteParams.Endpoint, containerDeleteParams.Key);
-
                 Database db = await client.CreateDatabaseIfNotExistsAsync(containerDeleteParams.Database);
 
-                Container container = containerDeleteParams.PartitionKey is null ?
-                    await db.CreateContainerIfNotExistsAsync(containerDeleteParams.Container, containerDeleteParams.PartitionKey) :
-                    db.GetContainer(containerDeleteParams.Container);
-                await container.DeleteContainerAsync();
+                if (await ContainerExistsAsync(db, containerDeleteParams.Container, containerDeleteParams))
+                {
+                    Container container = db.GetContainer(containerDeleteParams.Container);
+                    await container.DeleteContainerAsync();
 
-                Utilities.WriteLine($"Container {container.Id} deleted");
+                    Utilities.WriteLine($"Container {container.Id} deleted");
+                }
+                else
+                {
+                    Utilities.ErrorWriteLine($"Container {containerDeleteParams.Container} not found in database {containerDeleteParams.Database}");
+                    return -1;
+                }
             }
             catch (Exception ex)
             {
@@ -46,5 +51,23 @@ public static class ContainerDeleteCommand
             Console.ForegroundColor = defaultConsoleColor;
         }
         return 0;
+    }
+
+    private static async Task<bool> ContainerExistsAsync(Database db, string? container, ContainerDeleteParameters param)
+    {
+        QueryDefinition queryDefinition = new QueryDefinition("SELECT * FROM c where c.id = @name")
+            .WithParameter("@name", param.Container);
+
+        FeedIterator<ContainerProperties> containerIterator = db.GetContainerQueryIterator<ContainerProperties>(queryDefinition);
+        while (containerIterator.HasMoreResults)
+        {
+            foreach (var containerInfo in await containerIterator.ReadNextAsync())
+            {
+                if (containerInfo.Id == container)
+                    return true;
+            }
+        }
+
+        return false;
     }
 }
