@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.4.2"></a>
+## [0.4.2](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.4.2) (2025-01-19)
+
+### Bug Fixes
+
+* added _lsn to the option help for DropSystemProperties in contain select-item ([890b554](https://www.github.com/rtodosic/CosmosCli/commit/890b5543163a11b544281b7b611c707717bf82a8))
+
 <a name="0.4.1"></a>
 ## [0.4.1](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.4.1) (2025-01-19)
 
