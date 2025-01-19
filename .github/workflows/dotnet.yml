@@ -50,28 +50,28 @@ jobs:
         git checkout .husky/_/husky.sh
 
     - name: Versionize Release
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/main'
       id: versionize
       run: versionize --exit-insignificant-commits
       continue-on-error: true
 
     - name: Pack file for Nuget
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/main'
       run: dotnet pack -c Release
 
     - name: No Release Required
-      if:  github.ref == 'refs/heads/master' && steps.versionize.outcome != 'success'
+      if:  github.ref == 'refs/heads/main' && steps.versionize.outcome != 'success'
       run: echo "Skipping Release. No release required."
   
     - name: Get most recent tag
-      if: github.ref == 'refs/heads/master' && steps.versionize.outcome == 'success'
+      if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
       id: tag
       run: |
         tag=$(git describe --tags --abbrev=0)
         echo "tag=$tag" >> $GITHUB_OUTPUT  
 
     - name: Push changes to GitHub
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/main'
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -79,7 +79,7 @@ jobs:
         tags: true
 
     - name: Create GitHub Release
-      if:  github.ref == 'refs/heads/master' && steps.versionize.outcome == 'success'
+      if:  github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
       id: create_release
       uses: ncipollo/release-action@v1.14.0
       with:
