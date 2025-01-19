@@ -5,7 +5,7 @@ namespace CosmosCli.Parameters;
 public class ContainerSelectItemParameters : ContainerParameters
 {
     // Select command params
-    [Option('_', Description = "Drop system generated properties (_rid, _attachments, _etag, _self, _ts).")]
+    [Option('_', Description = "Drop system generated properties (_rid, _attachments, _etag, _self, _ts, _lsn).")]
     public bool DropSystemProperties { get; set; }
 
     [Option('j', Description = "Compress the json output by removing whitespace and carriage returns.")]
