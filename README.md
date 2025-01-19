@@ -344,7 +344,7 @@ The following displays information about utilized indexes as well as suggests po
 cosmos container select-item -d TestDB -c Container1 -m "Select * from c order by c.name"
 ```
 
-The system generated properties (_rid, _self, _etag, _attachments, and _ts) can be removed by doing the following:
+The system generated properties (_rid, _self, _etag, _attachments, _ts and _lsn) can be removed by doing the following:
 
 ```bash
 cosmos container select-item -d TestDB -c Container1 -_ "Select * from c order by c.name"

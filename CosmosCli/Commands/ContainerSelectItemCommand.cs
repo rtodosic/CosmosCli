@@ -98,6 +98,7 @@ public static class ContainerSelectItemCommand
                                     obj.Remove("_etag");
                                     obj.Remove("_self");
                                     obj.Remove("_ts");
+                                    obj.Remove("_lsn");
                                 }
                                 jsonArray.Add(obj);
                             }
