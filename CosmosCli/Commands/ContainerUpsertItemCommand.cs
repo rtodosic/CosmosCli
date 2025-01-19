@@ -34,7 +34,9 @@ public static class ContainerUpsertItemCommand
                 upsertParams.VerboseWriteLine($"Get Database ({upsertParams.Database})...");
                 Database database = await client.CreateDatabaseIfNotExistsAsync(upsertParams.Database);
                 upsertParams.VerboseWriteLine($"Get Container ({upsertParams.Container})...");
-                Container container = database.GetContainer(upsertParams.Container);
+                Container container = await database.CreateContainerIfNotExistsAsync(
+                    upsertParams.Container,
+                    $"/{upsertParams.PartitionKey}");
 
                 dynamic json;
                 var responseStats = new JArray();

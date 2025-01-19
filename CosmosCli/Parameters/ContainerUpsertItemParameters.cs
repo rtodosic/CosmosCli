@@ -40,5 +40,15 @@ public class ContainerUpsertItemParameters : ContainerParameters
     public override void ValidateParams()
     {
         base.ValidateParams();
+
+        if (string.IsNullOrWhiteSpace(PartitionKey))
+        {
+            throw new CommandExitedException("PartitionKey must be specified", -15);
+        }
+
+        if (PartitionKey.StartsWith('/'))
+        {
+            PartitionKey = PartitionKey.Substring(1);
+        }
     }
 }
