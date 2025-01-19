@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.4.1"></a>
+## [0.4.1](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.4.1) (2025-01-19)
+
+### Bug Fixes
+
+* check to see container exists during container delete ([5de6e24](https://www.github.com/rtodosic/CosmosCli/commit/5de6e24e73599368da0c3b7552f85b8a56e04adf))
+* check to see container exists during container new ([356e27b](https://www.github.com/rtodosic/CosmosCli/commit/356e27bb7d03a44ebfbfd9cc431f3ca855d261d1))
+* check to see database exists during database delete ([12c7323](https://www.github.com/rtodosic/CosmosCli/commit/12c73233c6f95bc62b052ae47bb9053dee5774d8))
+* check to see database exists during database new ([c82eaf8](https://www.github.com/rtodosic/CosmosCli/commit/c82eaf8d5401817d89bd45aba460d073a9dd9bc0))
+* create container if doesn't exist during container upsert-item ([c85babc](https://www.github.com/rtodosic/CosmosCli/commit/c85babc962d76d067d72ef864d26bdefa5b1ab73))
+* remove _lsn from container select-items when DropSystemProperties is specified ([3c50802](https://www.github.com/rtodosic/CosmosCli/commit/3c5080298c95604796ee24e19bb4002f35ba90e8))
+
 <a name="0.4.0"></a>
 ## [0.4.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.4.0) (2025-01-03)
 
