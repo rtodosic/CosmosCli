@@ -21,10 +21,18 @@ public static class DatabaseDeleteCommand
                 databaseDeleteParams.VerboseWriteLine("Connecting to the Cosmos DB...");
                 var client = new CosmosClient(databaseDeleteParams.Endpoint, databaseDeleteParams.Key);
 
-                Database db = await client.CreateDatabaseIfNotExistsAsync(databaseDeleteParams.Database);
-                await db.DeleteAsync();
+                if (!await DatabaseExistsAsync(client, databaseDeleteParams))
+                {
+                    Utilities.ErrorWriteLine($"Database {databaseDeleteParams.Database} does not exist");
+                    return -1;
+                }
+                else
+                {
+                    Database db = client.GetDatabase(databaseDeleteParams.Database);
+                    await db.DeleteAsync();
 
-                Utilities.WriteLine($"Database {db.Id} deleted");
+                    Utilities.WriteLine($"Database {db.Id} deleted");
+                }
             }
             catch (Exception ex)
             {
@@ -42,5 +50,22 @@ public static class DatabaseDeleteCommand
             Console.ForegroundColor = defaultConsoleColor;
         }
         return 0;
+    }
+
+    private static async Task<bool> DatabaseExistsAsync(CosmosClient client, DatabaseDeleteParameters databaseDeleteParams)
+    {
+        var queryDef = new QueryDefinition("SELECT * FROM c WHERE c.id = @id")
+            .WithParameter("@id", databaseDeleteParams.Database);
+
+        var databaseIterator = client.GetDatabaseQueryIterator<DatabaseProperties>(queryDef);
+        while (databaseIterator.HasMoreResults)
+        {
+            foreach (var databaseInfo in await databaseIterator.ReadNextAsync())
+            {
+                if (databaseInfo.Id == databaseDeleteParams.Database)
+                    return true;
+            }
+        }
+        return false;
     }
 }
