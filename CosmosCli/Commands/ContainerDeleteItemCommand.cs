@@ -1,13 +1,12 @@
 ﻿// Ignore Spelling: app
 
-using System.Text;
-
 using Cocona;
 
 using CosmosCli.Parameters;
 
 using Microsoft.Azure.Cosmos;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace CosmosCli.Commands;
@@ -32,7 +31,9 @@ public static class ContainerDeleteItemCommand
                 deleteParams.VerboseWriteLine($"Get Database ({deleteParams.Database})...");
                 Database database = await client.CreateDatabaseIfNotExistsAsync(deleteParams.Database);
                 deleteParams.VerboseWriteLine($"Get Container ({deleteParams.Container})...");
-                Container container = database.GetContainer(deleteParams.Container);
+                Container container = await database.CreateContainerIfNotExistsAsync(
+                    deleteParams.Container,
+                    $"/{deleteParams.PartitionKey}");
 
                 dynamic json;
                 var responseStats = new JArray();
@@ -45,21 +46,28 @@ public static class ContainerDeleteItemCommand
                     {
                         count++;
                         deleteParams.VerboseWriteLine($"Delete {count}...");
-                        var deletedItem = await DeleteItemAsync(container, jobj, deleteParams);
-                        jsonArray.Add(deletedItem.Resource);
+                        var resource = GetKeyAndPartition(jobj, deleteParams);
+                        var deletedItem = await DeleteItemAsync(container, resource, deleteParams);
+                        jsonArray.Add(resource);
 
                         if (deleteParams.ShowStats)
                             responseStats.Add(Utilities.ItemResponseJson(count, deletedItem));
                     }
+
+                    if (!deleteParams.ShowStats)
+                        Utilities.WriteLine(jsonArray.ToString(deleteParams.CompressJson ? Formatting.None : Formatting.Indented));
                 }
                 else if (jsonItems.Trim().StartsWith("{"))
                 {
                     json = JObject.Parse(jsonItems);
                     deleteParams.VerboseWriteLine("Delete json...");
-                    var deletedItem = await DeleteItemAsync(container, json, deleteParams);
+                    var resource = GetKeyAndPartition(json, deleteParams);
+                    var deletedItem = await DeleteItemAsync(container, resource, deleteParams);
 
                     if (deleteParams.ShowStats)
                         responseStats.Add(Utilities.ItemResponseJson(1, deletedItem));
+                    else
+                        Utilities.WriteLine(resource.ToString(deleteParams.CompressJson ? Formatting.None : Formatting.Indented));
                 }
                 else
                 {
@@ -98,12 +106,23 @@ public static class ContainerDeleteItemCommand
         return Utilities.ReadFromPipeIfNull(jsonItems);
     }
 
-    private static async Task<ItemResponse<dynamic>> DeleteItemAsync(Container container, JObject jobj, ContainerDeleteItemParameters deleteParams)
+    private static JObject GetKeyAndPartition(JObject jobj, ContainerDeleteItemParameters deleteParams)
     {
         var id = jobj["id"].ToString();
         // TODO: what if the partition key is not a string?
         var partitionKey = jobj[deleteParams.PartitionKey].ToString();
         deleteParams.VerboseWriteLine($"Id: {id}, ParitionKey: {partitionKey}");
+        return new JObject
+        {
+            ["id"] = id,
+            [deleteParams.PartitionKey] = partitionKey
+        };
+    }
+
+    private static async Task<ItemResponse<dynamic>> DeleteItemAsync(Container container, JObject jobj, ContainerDeleteItemParameters deleteParams)
+    {
+        var id = jobj["id"].ToString();
+        var partitionKey = jobj[deleteParams.PartitionKey].ToString();
 
         var itemRequestOptions = new ItemRequestOptions
         {
@@ -131,6 +150,7 @@ public static class ContainerDeleteItemCommand
             partitionKey: new PartitionKey(partitionKey),
             requestOptions: itemRequestOptions
         );
+
         return deletedItem;
     }
 }

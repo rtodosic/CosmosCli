@@ -4,6 +4,9 @@ namespace CosmosCli.Parameters;
 
 public class ContainerDeleteItemParameters : ContainerParameters
 {
+    [Option('j', Description = "Compress the json output by removing whitespace and carriage returns.")]
+    public bool CompressJson { get; set; }
+
     [Option('s', Description = "Show response statistics (including RUs, StatusCode, ContinuationToken).")]
     public bool ShowStats { get; set; }
 
@@ -39,6 +42,11 @@ public class ContainerDeleteItemParameters : ContainerParameters
         if (string.IsNullOrWhiteSpace(PartitionKey))
         {
             throw new CommandExitedException("PartitionKey is required", -15);
+        }
+
+        if (PartitionKey.StartsWith('/'))
+        {
+            PartitionKey = PartitionKey[1..];
         }
     }
 }

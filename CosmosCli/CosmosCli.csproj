@@ -16,7 +16,8 @@
     <RepositoryUrl>https://github.com/rtodosic/CosmosCli</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Platforms>AnyCPU</Platforms> 
+    <Platforms>AnyCPU</Platforms>
+    <PackageIcon>cosmos.png</PackageIcon> 
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Cocona.Lite" Version="2.2.0" />
@@ -25,6 +26,12 @@
     <ItemGroup>
     <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
+    <ItemGroup>
+      <None Update="images\cosmos.png">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+    </ItemGroup>
   <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0">
     <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />
     <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory=".." />

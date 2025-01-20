@@ -39,7 +39,7 @@ public static class ContainerIndexCommand
                     await container.ReplaceContainerAsync(containerProperties);
                 }
 
-                Utilities.WriteLine(JsonConvert.SerializeObject(containerProperties.IndexingPolicy));
+                Utilities.WriteLine(Utilities.SerializeObject(containerProperties.IndexingPolicy));
             }
             catch (Exception ex)
             {
