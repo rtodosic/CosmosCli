@@ -48,7 +48,7 @@ public class ContainerUpsertItemParameters : ContainerParameters
 
         if (PartitionKey.StartsWith('/'))
         {
-            PartitionKey = PartitionKey.Substring(1);
+            PartitionKey = PartitionKey[1..];
         }
     }
 }
