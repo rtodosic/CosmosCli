@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.4.3"></a>
+## [0.4.3](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.4.3) (2025-01-20)
+
+### Bug Fixes
+
+* added image to nuget package ([0296037](https://www.github.com/rtodosic/CosmosCli/commit/0296037a93eb39fd82711a7a805447feabe0cace))
+* indent json resonse for container index ([2ea500f](https://www.github.com/rtodosic/CosmosCli/commit/2ea500f2f3cb3f2c6673e46ad5a2222fe93ca8f5))
+* output deleted key and partition key when running container delete-item ([2077e42](https://www.github.com/rtodosic/CosmosCli/commit/2077e4227e022472bf19bceef6afa294e9bf34d7))
+
 <a name="0.4.2"></a>
 ## [0.4.2](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.4.2) (2025-01-19)
 

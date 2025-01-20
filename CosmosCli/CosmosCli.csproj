@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <PackAsTool>true</PackAsTool>
     <PackageId>CosmosCli</PackageId>
-    <Version>0.4.2</Version>
+    <Version>0.4.3</Version>
     <Title>Cosmos</Title>
     <ToolCommandName>Cosmos</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
