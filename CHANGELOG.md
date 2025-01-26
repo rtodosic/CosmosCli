@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.4.4"></a>
+## [0.4.4](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.4.4) (2025-01-26)
+
+### Bug Fixes
+
+* minor refactors ([1ecdcb4](https://www.github.com/rtodosic/CosmosCli/commit/1ecdcb4849d3ee618435bb1281716ac81d7759f5))
+
 <a name="0.4.3"></a>
 ## [0.4.3](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.4.3) (2025-01-20)
 
