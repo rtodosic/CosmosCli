@@ -1,11 +1,6 @@
-﻿// Ignore Spelling: app
-
-using Cocona;
-
+﻿using Cocona;
 using CosmosCli.Parameters;
-
 using Microsoft.Azure.Cosmos;
-
 using Newtonsoft.Json.Linq;
 
 namespace CosmosCli.Commands;
@@ -38,7 +33,6 @@ public static class DatabaseShowCommand
                     {
                         JObject containerJsonObject = JObject.FromObject(containerInfo);
                         ((JArray)jsonObject["containers"]).Add(containerJsonObject);
-
                     }
                 }
 

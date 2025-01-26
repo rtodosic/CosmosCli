@@ -1,11 +1,6 @@
-﻿// Ignore Spelling: app
-
-using Cocona;
-
+﻿using Cocona;
 using CosmosCli.Parameters;
-
 using Microsoft.Azure.Cosmos;
-
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

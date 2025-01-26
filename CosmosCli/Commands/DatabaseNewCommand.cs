@@ -1,7 +1,6 @@
 ﻿using Cocona;
-
+using CosmosCli.Extensions;
 using CosmosCli.Parameters;
-
 using Microsoft.Azure.Cosmos;
 
 namespace CosmosCli.Commands;
@@ -21,7 +20,7 @@ public static class DatabaseNewCommand
                 databaseNewParams.VerboseWriteLine("Connecting to the Cosmos DB...");
                 var client = new CosmosClient(databaseNewParams.Endpoint, databaseNewParams.Key);
 
-                if (await DatabaseExistsAsync(client, databaseNewParams))
+                if (await client.DatabaseExistsAsync(databaseNewParams))
                 {
                     Utilities.WriteLine($"Database {databaseNewParams.Database} already exists");
                 }
@@ -62,22 +61,5 @@ public static class DatabaseNewCommand
             Console.ForegroundColor = defaultConsoleColor;
         }
         return 0;
-    }
-
-    private static async Task<bool> DatabaseExistsAsync(CosmosClient client, DatabaseNewParameters databaseNewParams)
-    {
-        var queryDef = new QueryDefinition("SELECT * FROM c WHERE c.id = @id")
-            .WithParameter("@id", databaseNewParams.Database);
-
-        var databaseIterator = client.GetDatabaseQueryIterator<DatabaseProperties>(queryDef);
-        while (databaseIterator.HasMoreResults)
-        {
-            foreach (var databaseInfo in await databaseIterator.ReadNextAsync())
-            {
-                if (databaseInfo.Id == databaseNewParams.Database)
-                    return true;
-            }
-        }
-        return false;
     }
 }

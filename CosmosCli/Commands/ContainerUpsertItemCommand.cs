@@ -1,13 +1,9 @@
-﻿// Ignore Spelling: app
-// Ignore Spelling: upsert
+﻿// Ignore Spelling: upsert
 // Ignore Spelling: upserted
 
 using Cocona;
-
 using CosmosCli.Parameters;
-
 using Microsoft.Azure.Cosmos;
-
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

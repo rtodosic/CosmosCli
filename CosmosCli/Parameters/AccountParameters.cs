@@ -1,5 +1,5 @@
 ﻿using Cocona;
-
+using CosmosCli.Validations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -8,10 +8,13 @@ namespace CosmosCli.Parameters;
 public class AccountParameters : ICommandParameterSet
 {
     [Option('e', Description = "The endpointUri used to connect to the Cosmos DB service")]
+    [ValidateEndpoint]
     [HasDefaultValue]
     public string? Endpoint { get; set; }
+
     [Option('k', Description = "The primary or secondary key used to connect to the Cosmos DB service.")]
     [HasDefaultValue]
+    [ValidateKey]
     public string? Key { get; set; }
 
     [JsonIgnore]
@@ -41,7 +44,7 @@ public class AccountParameters : ICommandParameterSet
 
         if (string.IsNullOrWhiteSpace(Key))
         {
-            throw new CommandExitedException(" key is required", -11);
+            throw new CommandExitedException(" key is required", -10);
         }
     }
 

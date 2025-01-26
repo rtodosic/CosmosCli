@@ -1,11 +1,6 @@
-﻿// Ignore Spelling: app
-
-using Cocona;
-
+﻿using Cocona;
 using CosmosCli.Parameters;
-
 using Microsoft.Azure.Cosmos;
-
 using Newtonsoft.Json.Linq;
 
 namespace CosmosCli.Commands;
@@ -26,7 +21,6 @@ public static class AccountShowCommand
                 var client = new CosmosClient(accountParams.Endpoint, accountParams.Key);
 
                 var accountInfo = await client.ReadAccountAsync();
-
                 JObject jsonObject = JObject.FromObject(accountInfo);
                 jsonObject["databases"] = new JArray();
 
