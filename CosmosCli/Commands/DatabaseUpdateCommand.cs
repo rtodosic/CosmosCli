@@ -1,7 +1,5 @@
 ﻿using Cocona;
-
 using CosmosCli.Parameters;
-
 using Microsoft.Azure.Cosmos;
 
 namespace CosmosCli.Commands;

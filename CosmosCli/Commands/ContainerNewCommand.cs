@@ -1,9 +1,7 @@
 ﻿using Cocona;
-
+using CosmosCli.Extensions;
 using CosmosCli.Parameters;
-
 using Microsoft.Azure.Cosmos;
-
 using Newtonsoft.Json;
 
 namespace CosmosCli.Commands;
@@ -24,7 +22,7 @@ public static class ContainerNewCommand
                 var client = new CosmosClient(containerNewParams.Endpoint, containerNewParams.Key);
 
                 Database db = await client.CreateDatabaseIfNotExistsAsync(containerNewParams.Database);
-                if (await ContainerExistsAsync(db, containerNewParams.Container, containerNewParams))
+                if (await db.ContainerExistsAsync(containerNewParams.Container, containerNewParams))
                 {
                     Utilities.WriteLine($"Container {containerNewParams.Container} already exists in database {containerNewParams.Database}");
                 }
@@ -111,27 +109,8 @@ public static class ContainerNewCommand
         {
             string json = File.ReadAllText(indexFilename);
             IndexingPolicy indexingPolicy = JsonConvert.DeserializeObject<IndexingPolicy>(json);
-
             return indexingPolicy;
         }
         return new IndexingPolicy();
-    }
-
-    private static async Task<bool> ContainerExistsAsync(Database db, string? container, ContainerNewParameters param)
-    {
-        QueryDefinition queryDefinition = new QueryDefinition("SELECT * FROM c where c.id = @name")
-            .WithParameter("@name", param.Container);
-
-        FeedIterator<ContainerProperties> containerIterator = db.GetContainerQueryIterator<ContainerProperties>(queryDefinition);
-        while (containerIterator.HasMoreResults)
-        {
-            foreach (var containerInfo in await containerIterator.ReadNextAsync())
-            {
-                if (containerInfo.Id == container)
-                    return true;
-            }
-        }
-
-        return false;
     }
 }

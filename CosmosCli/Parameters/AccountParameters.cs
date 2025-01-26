@@ -1,5 +1,5 @@
 ﻿using Cocona;
-
+using CosmosCli.Validations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -8,10 +8,13 @@ namespace CosmosCli.Parameters;
 public class AccountParameters : ICommandParameterSet
 {
     [Option('e', Description = "The endpointUri used to connect to the Cosmos DB service")]
+    [ValidateEndpoint]
     [HasDefaultValue]
     public string? Endpoint { get; set; }
+
     [Option('k', Description = "The primary or secondary key used to connect to the Cosmos DB service.")]
     [HasDefaultValue]
+    [ValidateKey]
     public string? Key { get; set; }
 
     [JsonIgnore]

@@ -1,5 +1,4 @@
 ﻿using Cocona;
-
 using Newtonsoft.Json.Linq;
 
 namespace CosmosCli.Parameters;
