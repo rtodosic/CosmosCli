@@ -44,7 +44,7 @@ public class AccountParameters : ICommandParameterSet
 
         if (string.IsNullOrWhiteSpace(Key))
         {
-            throw new CommandExitedException(" key is required", -11);
+            throw new CommandExitedException(" key is required", -10);
         }
     }
 

@@ -43,7 +43,7 @@ public class ContainerUpsertItemParameters : ContainerParameters
 
         if (string.IsNullOrWhiteSpace(PartitionKey))
         {
-            throw new CommandExitedException("PartitionKey must be specified", -15);
+            throw new CommandExitedException("PartitionKey must be specified", -11);
         }
 
         if (PartitionKey.StartsWith('/'))

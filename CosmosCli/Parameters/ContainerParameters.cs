@@ -15,7 +15,7 @@ public class ContainerParameters : DatabaseParameters
         base.ValidateParams();
         if (string.IsNullOrWhiteSpace(Container))
         {
-            throw new CommandExitedException("Container must be specified", -16);
+            throw new CommandExitedException("Container must be specified", -10);
         }
     }
 

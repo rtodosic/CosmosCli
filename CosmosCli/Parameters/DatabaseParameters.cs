@@ -15,7 +15,7 @@ public class DatabaseParameters : AccountParameters
         base.ValidateParams();
         if (string.IsNullOrWhiteSpace(Database))
         {
-            throw new CommandExitedException("Database must be specified", -15);
+            throw new CommandExitedException("Database must be specified", -10);
         }
     }
 

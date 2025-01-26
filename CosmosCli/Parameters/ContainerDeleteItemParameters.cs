@@ -41,7 +41,7 @@ public class ContainerDeleteItemParameters : ContainerParameters
         base.ValidateParams();
         if (string.IsNullOrWhiteSpace(PartitionKey))
         {
-            throw new CommandExitedException("PartitionKey is required", -15);
+            throw new CommandExitedException("PartitionKey is required", -11);
         }
 
         if (PartitionKey.StartsWith('/'))

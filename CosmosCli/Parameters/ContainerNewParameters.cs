@@ -33,7 +33,7 @@ public class ContainerNewParameters : ContainerParameters
         base.ValidateParams();
         if (string.IsNullOrWhiteSpace(PartitionKey))
         {
-            throw new CommandExitedException("PartitionKey must be specified", -15);
+            throw new CommandExitedException("PartitionKey must be specified", -11);
         }
 
         if (AutoscaleThroughput is not null && ManualThroughput is not null)
