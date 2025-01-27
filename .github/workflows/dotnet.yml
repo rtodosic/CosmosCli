@@ -60,7 +60,7 @@ jobs:
       run: dotnet pack -c Release
 
     - name: No Release Required
-      if:  github.ref == 'refs/heads/main' && steps.versionize.outcome != 'success'
+      if: github.ref == 'refs/heads/main' && steps.versionize.outcome != 'success'
       run: echo "Skipping Release. No release required."
   
     - name: Get most recent tag
@@ -90,3 +90,6 @@ jobs:
         body: |
           Release notes [${{ steps.tag.outputs.tag }}](https://github.com/rtodosic/CosmosCli/blob/main/CHANGELOG.md)
 
+    - name: Publish to Nuget
+      if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
+      run: dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
