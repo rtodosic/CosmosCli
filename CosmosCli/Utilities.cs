@@ -1,7 +1,4 @@
-﻿using System.Text;
-
-using Microsoft.Azure.Cosmos;
-
+﻿using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
