@@ -83,19 +83,26 @@ public static class ContainerSelectItemCommand
                         FeedResponse<dynamic> response = await feed.ReadNextAsync();
                         foreach (dynamic item in response)
                         {
-                            var obj = item as JObject;
-                            if (obj != null)
+                            if (item is not JObject)
                             {
-                                if (selectParams.DropSystemProperties)
+                                jsonArray.Add(item);
+                            }
+                            else
+                            {
+                                var obj = item as JObject;
+                                if (obj != null)
                                 {
-                                    obj.Remove("_rid");
-                                    obj.Remove("_attachments");
-                                    obj.Remove("_etag");
-                                    obj.Remove("_self");
-                                    obj.Remove("_ts");
-                                    obj.Remove("_lsn");
+                                    if (selectParams.DropSystemProperties)
+                                    {
+                                        obj.Remove("_rid");
+                                        obj.Remove("_attachments");
+                                        obj.Remove("_etag");
+                                        obj.Remove("_self");
+                                        obj.Remove("_ts");
+                                        obj.Remove("_lsn");
+                                    }
+                                    jsonArray.Add(obj);
                                 }
-                                jsonArray.Add(obj);
                             }
                         }
 

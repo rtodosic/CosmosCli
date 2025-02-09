@@ -15,7 +15,7 @@ public class ContainerParameters : DatabaseParameters
         base.ValidateParams();
         if (string.IsNullOrWhiteSpace(Container))
         {
-            throw new CommandExitedException("Container must be specified", -10);
+            throw new CommandExitedException($"{nameof(Container)} must be specified", -10);
         }
     }
 
@@ -34,7 +34,7 @@ public class ContainerParameters : DatabaseParameters
         // Load from config file
         if (ConfigFileJson is not null && string.IsNullOrWhiteSpace(Container))
         {
-            if (ConfigFileJson.TryGetValue("Container", out JToken containerToken))
+            if (ConfigFileJson.TryGetValue(nameof(Container), out JToken? containerToken))
             {
                 Container = containerToken.ToString();
                 if (!string.IsNullOrWhiteSpace(Container))

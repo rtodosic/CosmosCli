@@ -72,7 +72,7 @@ public class AccountParameters : ICommandParameterSet
         {
             if (string.IsNullOrWhiteSpace(Endpoint))
             {
-                if (ConfigFileJson.TryGetValue("Endpoint", out JToken endpointToken))
+                if (ConfigFileJson.TryGetValue(nameof(Endpoint), out JToken? endpointToken))
                 {
                     Endpoint = endpointToken.ToString();
                     if (!string.IsNullOrWhiteSpace(Endpoint))
@@ -82,7 +82,7 @@ public class AccountParameters : ICommandParameterSet
 
             if (string.IsNullOrWhiteSpace(Key))
             {
-                if (ConfigFileJson.TryGetValue("Key", out JToken keyToken))
+                if (ConfigFileJson.TryGetValue(nameof(Key), out JToken? keyToken))
                 {
                     Key = keyToken.ToString();
                     if (!string.IsNullOrWhiteSpace(Key))

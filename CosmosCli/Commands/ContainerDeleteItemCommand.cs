@@ -103,9 +103,13 @@ public static class ContainerDeleteItemCommand
 
     private static JObject GetKeyAndPartition(JObject jobj, ContainerDeleteItemParameters deleteParams)
     {
-        var id = jobj["id"].ToString();
-        // TODO: what if the partition key is not a string?
-        var partitionKey = jobj[deleteParams.PartitionKey].ToString();
+        var id = jobj["id"]?.ToString();
+        if (id == null)
+            throw new CommandExitedException("JSON does not contain an 'id' property", -14);
+        var partitionKey = jobj[deleteParams.PartitionKey]?.ToString();
+        if (id == null)
+            throw new CommandExitedException($"JSON does not contain an '{deleteParams.PartitionKey}' property", -14);
+
         deleteParams.VerboseWriteLine($"Id: {id}, ParitionKey: {partitionKey}");
         return new JObject
         {
@@ -116,8 +120,12 @@ public static class ContainerDeleteItemCommand
 
     private static async Task<ItemResponse<dynamic>> DeleteItemAsync(Container container, JObject jobj, ContainerDeleteItemParameters deleteParams)
     {
-        var id = jobj["id"].ToString();
-        var partitionKey = jobj[deleteParams.PartitionKey].ToString();
+        var id = jobj["id"]?.ToString();
+        if (id == null)
+            throw new CommandExitedException("JSON does not contain an 'id' property", -14);
+        var partitionKey = jobj[deleteParams.PartitionKey]?.ToString();
+        if (partitionKey == null)
+            throw new CommandExitedException($"JSON does not contain an '{deleteParams.PartitionKey}' property", -14);
 
         var itemRequestOptions = new ItemRequestOptions
         {

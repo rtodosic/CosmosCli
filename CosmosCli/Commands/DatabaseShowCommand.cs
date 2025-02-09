@@ -32,7 +32,7 @@ public static class DatabaseShowCommand
                     foreach (var containerInfo in await containerIterator.ReadNextAsync())
                     {
                         JObject containerJsonObject = JObject.FromObject(containerInfo);
-                        ((JArray)jsonObject["containers"]).Add(containerJsonObject);
+                        (jsonObject["containers"] as JArray)?.Add(containerJsonObject);
                     }
                 }
 

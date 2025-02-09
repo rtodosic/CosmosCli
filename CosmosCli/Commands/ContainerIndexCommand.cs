@@ -87,8 +87,7 @@ public static class ContainerIndexCommand
     {
         if (index is not null)
         {
-            IndexingPolicy indexingPolicy = JsonConvert.DeserializeObject<IndexingPolicy>(index);
-            return indexingPolicy;
+            return JsonConvert.DeserializeObject<IndexingPolicy>(index) ?? new IndexingPolicy();
         }
         return new IndexingPolicy();
     }

@@ -476,3 +476,8 @@ $RECYCLE.BIN/
 
 # Husky files
 !.husky/_/husky.sh
+
+Test1/
+Test2/
+Test3/  
+some_ideas.txt
