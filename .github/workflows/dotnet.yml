@@ -5,91 +5,90 @@ name: Build .Net, Version and Release
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
 
-    - name: Install Versionize
-      run: dotnet tool install --global Versionize
+      - name: Install Versionize
+        run: dotnet tool install --global Versionize --version 2.3.0
 
-    - name: Install dotnet format
-      run: dotnet tool install -g dotnet-format
+      - name: Install dotnet format
+        run: dotnet tool install -g dotnet-format
 
-    - name: Setup git
-      run: |
-        git config --local user.email "rtodosic@hotmail.com"
-        git config --local user.name "Richard Todosichuk"
+      - name: Setup git
+        run: |
+          git config --local user.email "rtodosic@hotmail.com"
+          git config --local user.name "Richard Todosichuk"
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - name: dotnet build
-      run: dotnet build -c Release
+      - name: dotnet build
+        run: dotnet build -c Release
 
-    - name: Undo husky changes
-      run: |
-        git checkout .husky/commit-msg
-        git checkout .husky/pre-commit
-        git checkout .husky/_/.gitignore
-        git checkout .husky/_/husky.sh
+      - name: Undo husky changes
+        run: |
+          git checkout .husky/commit-msg
+          git checkout .husky/pre-commit
+          git checkout .husky/_/.gitignore
+          git checkout .husky/_/husky.sh
 
-    - name: Versionize Release
-      if: github.ref == 'refs/heads/main'
-      id: versionize
-      run: versionize --exit-insignificant-commits
-      continue-on-error: true
+      - name: Versionize Release
+        if: github.ref == 'refs/heads/main'
+        id: versionize
+        run: versionize --exit-insignificant-commits
+        continue-on-error: true
 
-    - name: Pack file for Nuget
-      if: github.ref == 'refs/heads/main'
-      run: dotnet pack -c Release
+      - name: Pack file for Nuget
+        if: github.ref == 'refs/heads/main'
+        run: dotnet pack -c Release
 
-    - name: No Release Required
-      if: github.ref == 'refs/heads/main' && steps.versionize.outcome != 'success'
-      run: echo "Skipping Release. No release required."
-  
-    - name: Get most recent tag
-      if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
-      id: tag
-      run: |
-        tag=$(git describe --tags --abbrev=0)
-        echo "tag=$tag" >> $GITHUB_OUTPUT  
+      - name: No Release Required
+        if: github.ref == 'refs/heads/main' && steps.versionize.outcome != 'success'
+        run: echo "Skipping Release. No release required."
 
-    - name: Push changes to GitHub
-      if: github.ref == 'refs/heads/main'
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
-        tags: true
+      - name: Get most recent tag
+        if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
+        id: tag
+        run: |
+          tag=$(git describe --tags --abbrev=0)
+          echo "tag=$tag" >> $GITHUB_OUTPUT
 
-    - name: Create GitHub Release
-      if:  github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
-      id: create_release
-      uses: ncipollo/release-action@v1.14.0
-      with:
-        artifacts: "**/*.nupkg"
-        name: ${{ steps.tag.outputs.tag }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ steps.tag.outputs.tag }}
-        body: |
-          Release notes [${{ steps.tag.outputs.tag }}](https://github.com/rtodosic/CosmosCli/blob/main/CHANGELOG.md)
+      - name: Push changes to GitHub
+        if: github.ref == 'refs/heads/main'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          tags: true
 
-    - name: Publish to Nuget
-      if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
-      run: dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+      - name: Create GitHub Release
+        if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
+        id: create_release
+        uses: ncipollo/release-action@v1.14.0
+        with:
+          artifacts: "**/*.nupkg"
+          name: ${{ steps.tag.outputs.tag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.tag.outputs.tag }}
+          body: |
+            Release notes [${{ steps.tag.outputs.tag }}](https://github.com/rtodosic/CosmosCli/blob/main/CHANGELOG.md)
+
+      - name: Publish to Nuget
+        if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
+        run: dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
