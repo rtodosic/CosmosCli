@@ -34,7 +34,7 @@ public class DatabaseParameters : AccountParameters
         // Load from config file
         if (ConfigFileJson is not null && string.IsNullOrWhiteSpace(Database))
         {
-            if (ConfigFileJson.TryGetValue("Database", out JToken databaseToken))
+            if (ConfigFileJson.TryGetValue(nameof(Database), out JToken? databaseToken))
             {
                 Database = databaseToken.ToString();
                 if (!string.IsNullOrWhiteSpace(Database))

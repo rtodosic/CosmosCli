@@ -108,8 +108,7 @@ public static class ContainerNewCommand
         if (indexFilename is not null && File.Exists(indexFilename))
         {
             string json = File.ReadAllText(indexFilename);
-            IndexingPolicy indexingPolicy = JsonConvert.DeserializeObject<IndexingPolicy>(json);
-            return indexingPolicy;
+            return JsonConvert.DeserializeObject<IndexingPolicy>(json) ?? new IndexingPolicy();
         }
         return new IndexingPolicy();
     }

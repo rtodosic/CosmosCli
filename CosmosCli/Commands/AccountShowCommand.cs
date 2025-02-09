@@ -31,7 +31,7 @@ public static class AccountShowCommand
                     foreach (var databaseInfo in await databaseIterator.ReadNextAsync())
                     {
                         JObject databaseJsonObject = JObject.FromObject(databaseInfo);
-                        ((JArray)jsonObject["databases"]).Add(databaseJsonObject);
+                        (jsonObject["databases"] as JArray)?.Add(databaseJsonObject);
                         databaseJsonObject["containers"] = new JArray();
 
                         Database db = client.GetDatabase(databaseInfo.Id);
@@ -41,7 +41,7 @@ public static class AccountShowCommand
                             foreach (var containerInfo in await containerIterator.ReadNextAsync())
                             {
                                 JObject containerJsonObject = JObject.FromObject(containerInfo);
-                                ((JArray)databaseJsonObject["containers"]).Add(containerJsonObject);
+                                (databaseJsonObject["containers"] as JArray)?.Add(containerJsonObject);
 
                             }
                         }

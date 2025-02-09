@@ -106,7 +106,9 @@ public static class ContainerUpsertItemCommand
 
     private static async Task<ItemResponse<dynamic>> UpsertItemAsync(Container container, JObject jobj, ContainerUpsertItemParameters upsertParams)
     {
-        var partitionKey = jobj[upsertParams.PartitionKey].ToString();
+        var partitionKey = jobj[upsertParams.PartitionKey]?.ToString();
+        if (partitionKey is null)
+            throw new CommandExitedException($"PartitionKey {upsertParams.PartitionKey} not found in JSON", -14);
         upsertParams.VerboseWriteLine($"ParitionKey: {partitionKey}");
 
         var itemRequestOptions = new ItemRequestOptions
