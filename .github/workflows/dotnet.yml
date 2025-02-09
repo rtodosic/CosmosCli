@@ -51,7 +51,7 @@ jobs:
       - name: Versionize Release
         if: github.ref == 'refs/heads/main'
         id: versionize
-        run: versionize changelog --exit-insignificant-commits
+        run: versionize --exit-insignificant-commits
         continue-on-error: true
 
       - name: Pack file for Nuget
