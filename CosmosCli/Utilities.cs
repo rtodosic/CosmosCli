@@ -93,7 +93,6 @@ public static class Utilities
         {
             NullValueHandling = NullValueHandling.Ignore
         };
-
         return JsonConvert.SerializeObject(
             obj,
             Formatting.Indented,
