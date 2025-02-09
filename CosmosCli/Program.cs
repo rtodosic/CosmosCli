@@ -3,6 +3,7 @@ using CosmosCli.Commands;
 
 var builder = CoconaLiteApp.CreateBuilder();
 var app = builder.Build();
+
 app.AddSubCommand("account", a =>
 {
     a.AddCommand("show", AccountShowCommand.Command);
