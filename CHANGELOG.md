@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.6.0"></a>
+## [0.6.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.6.0) (2025-02-17)
+
+### Features
+
+* added support for vector embedding policy ([b065417](https://www.github.com/rtodosic/CosmosCli/commit/b065417f88ffd0445715f80eef84ea87569ebaa9))
+
 <a name="0.5.0"></a>
 ## [0.5.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.5.0) (2025-02-09)
 
