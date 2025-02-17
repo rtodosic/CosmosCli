@@ -24,6 +24,11 @@ public class ContainerNewParameters : ContainerParameters
     [HasDefaultValue]
     public string? IndexFilename { get; set; }
 
+    [Option("vector", Description = "(optional) file that holds the vector policy.")]
+    [HasDefaultValue]
+    public string? VectorFilename { get; set; }
+
+
     [Option("defaultTimeToLive", Description = "The time to live on the container.")]
     [HasDefaultValue]
     public int? DefaultTimeToLive { get; set; }
