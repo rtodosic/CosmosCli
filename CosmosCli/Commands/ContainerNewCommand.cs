@@ -38,13 +38,13 @@ public static class ContainerNewCommand
                                 //ConflictResolutionPolicy
                                 DefaultTimeToLive = containerNewParams.DefaultTimeToLive,
                                 //GeospatialConfig
-                                IndexingPolicy = ReadIndexFile(containerNewParams.IndexFilename)
+                                IndexingPolicy = ReadIndexFile(containerNewParams.IndexFilename),
                                 //PartitionKeyDefinitionVersion
                                 //PartitionKeyPaths
                                 //SelfLink
                                 //TimeToLivePropertyPath
                                 //UniqueKeyPolicy
-                                //VectorEmbeddingPolicy
+                                VectorEmbeddingPolicy = ReadVectorFile(containerNewParams.VectorFilename)
                             },
                             ThroughputProperties.CreateAutoscaleThroughput(containerNewParams.AutoscaleThroughput ?? 0)),
                         (null, not null) => await db.CreateContainerIfNotExistsAsync(
@@ -55,13 +55,13 @@ public static class ContainerNewCommand
                                //ConflictResolutionPolicy
                                DefaultTimeToLive = containerNewParams.DefaultTimeToLive,
                                //GeospatialConfig
-                               IndexingPolicy = ReadIndexFile(containerNewParams.IndexFilename)
+                               IndexingPolicy = ReadIndexFile(containerNewParams.IndexFilename),
                                //PartitionKeyDefinitionVersion
                                //PartitionKeyPaths
                                //SelfLink
                                //TimeToLivePropertyPath
                                //UniqueKeyPolicy
-                               //VectorEmbeddingPolicy
+                               VectorEmbeddingPolicy = ReadVectorFile(containerNewParams.VectorFilename)
                            },
                            ThroughputProperties.CreateManualThroughput(containerNewParams.ManualThroughput ?? 0)),
                         _ => await db.CreateContainerIfNotExistsAsync(
@@ -72,13 +72,13 @@ public static class ContainerNewCommand
                               //ConflictResolutionPolicy
                               DefaultTimeToLive = containerNewParams.DefaultTimeToLive,
                               //GeospatialConfig
-                              IndexingPolicy = ReadIndexFile(containerNewParams.IndexFilename)
+                              IndexingPolicy = ReadIndexFile(containerNewParams.IndexFilename),
                               //PartitionKeyDefinitionVersion
                               //PartitionKeyPaths
                               //SelfLink
                               //TimeToLivePropertyPath
                               //UniqueKeyPolicy
-                              //VectorEmbeddingPolicy
+                              VectorEmbeddingPolicy = ReadVectorFile(containerNewParams.VectorFilename)
                           })
                     };
 
@@ -111,5 +111,15 @@ public static class ContainerNewCommand
             return JsonConvert.DeserializeObject<IndexingPolicy>(json) ?? new IndexingPolicy();
         }
         return new IndexingPolicy();
+    }
+
+    private static VectorEmbeddingPolicy? ReadVectorFile(string? vectorFilename)
+    {
+        if (vectorFilename is not null && File.Exists(vectorFilename))
+        {
+            string json = File.ReadAllText(vectorFilename);
+            return JsonConvert.DeserializeObject<VectorEmbeddingPolicy>(json);
+        }
+        return null;
     }
 }

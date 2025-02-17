@@ -178,7 +178,7 @@ public static class ContainerSelectItemCommand
             {
 
                 selectParams.VerboseWriteLine("Query from pipeline:");
-                selectParams.VerboseWriteLine(query ?? "");
+                selectParams.VerboseWriteLine(query);
             }
         }
         return query;
