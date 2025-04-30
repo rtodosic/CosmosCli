@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.7.1"></a>
+## [0.7.1](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.7.1) (2025-04-30)
+
+### Bug Fixes
+
+* support different types of partition keys (int, double, string) ([5cff26a](https://www.github.com/rtodosic/CosmosCli/commit/5cff26ae1b26405194e8f11a18c1da31ed7aaeb7))
+
 <a name="0.7.0"></a>
 ## [0.7.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.7.0) (2025-02-17)
 
