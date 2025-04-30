@@ -104,12 +104,20 @@ public static class ContainerUpsertItemCommand
         return Utilities.ReadFromPipeIfNull(jsonItems);
     }
 
-    private static async Task<ItemResponse<dynamic>> UpsertItemAsync(Container container, JObject jobj, ContainerUpsertItemParameters upsertParams)
+    private static async Task<ItemResponse<dynamic>> UpsertItemAsync(Container container, JObject jObj, ContainerUpsertItemParameters upsertParams)
     {
-        var partitionKey = jobj[upsertParams.PartitionKey]?.ToString();
-        if (partitionKey is null)
-            throw new CommandExitedException($"PartitionKey {upsertParams.PartitionKey} not found in JSON", -14);
-        upsertParams.VerboseWriteLine($"ParitionKey: {partitionKey}");
+        var partitionKeyToken = jObj[upsertParams.PartitionKey] ?? throw new CommandExitedException($"PartitionKey {upsertParams.PartitionKey} not found in JSON", -14);
+        PartitionKey partitionKey = partitionKeyToken.Type switch
+        {
+            JTokenType.Integer => new PartitionKey(partitionKeyToken.Value<int>()),
+            JTokenType.Float => new PartitionKey(partitionKeyToken.Value<double>()),
+            JTokenType.Boolean => new PartitionKey(partitionKeyToken.Value<bool>()),
+            JTokenType.String => new PartitionKey(partitionKeyToken.Value<string>()),
+            JTokenType.Guid => new PartitionKey(partitionKeyToken.Value<Guid>().ToString()),
+            JTokenType.Date => new PartitionKey(partitionKeyToken.Value<DateTime>().ToString("o")),
+            _ => throw new CommandExitedException($"Unsupported PartitionKey type: {partitionKeyToken.Type}", -14)
+        };
+        upsertParams.VerboseWriteLine($"PartitionKey: {partitionKeyToken} (Type: {partitionKeyToken.Type})");
 
         var itemRequestOptions = new ItemRequestOptions
         {
@@ -130,11 +138,11 @@ public static class ContainerUpsertItemCommand
         upsertParams.VerboseWriteLine("ItemRequestOptions:");
         upsertParams.VerboseWriteLine(Utilities.SerializeObject(itemRequestOptions));
         upsertParams.VerboseWriteLine("Upsert...");
-        upsertParams.VerboseWriteLine(jobj.ToString());
+        upsertParams.VerboseWriteLine(jObj.ToString());
 
         var upsertedItem = await container.UpsertItemAsync<dynamic>(
-            item: jobj,
-            partitionKey: new PartitionKey(partitionKey),
+            item: jObj,
+            partitionKey: partitionKey,
             requestOptions: itemRequestOptions
         );
         return upsertedItem;

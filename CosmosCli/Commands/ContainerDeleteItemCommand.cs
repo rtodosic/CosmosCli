@@ -101,16 +101,16 @@ public static class ContainerDeleteItemCommand
         return Utilities.ReadFromPipeIfNull(jsonItems);
     }
 
-    private static JObject GetKeyAndPartition(JObject jobj, ContainerDeleteItemParameters deleteParams)
+    private static JObject GetKeyAndPartition(JObject jObj, ContainerDeleteItemParameters deleteParams)
     {
-        var id = jobj["id"]?.ToString();
+        var id = jObj["id"]?.ToString();
         if (id == null)
             throw new CommandExitedException("JSON does not contain an 'id' property", -14);
-        var partitionKey = jobj[deleteParams.PartitionKey]?.ToString();
+        var partitionKey = jObj[deleteParams.PartitionKey]?.ToString();
         if (id == null)
             throw new CommandExitedException($"JSON does not contain an '{deleteParams.PartitionKey}' property", -14);
 
-        deleteParams.VerboseWriteLine($"Id: {id}, ParitionKey: {partitionKey}");
+        deleteParams.VerboseWriteLine($"Id: {id}, PartitionKey: {partitionKey}");
         return new JObject
         {
             ["id"] = id,
@@ -118,14 +118,21 @@ public static class ContainerDeleteItemCommand
         };
     }
 
-    private static async Task<ItemResponse<dynamic>> DeleteItemAsync(Container container, JObject jobj, ContainerDeleteItemParameters deleteParams)
+    private static async Task<ItemResponse<dynamic>> DeleteItemAsync(Container container, JObject jObj, ContainerDeleteItemParameters deleteParams)
     {
-        var id = jobj["id"]?.ToString();
-        if (id == null)
-            throw new CommandExitedException("JSON does not contain an 'id' property", -14);
-        var partitionKey = jobj[deleteParams.PartitionKey]?.ToString();
-        if (partitionKey == null)
-            throw new CommandExitedException($"JSON does not contain an '{deleteParams.PartitionKey}' property", -14);
+        var id = (jObj["id"]?.ToString()) ?? throw new CommandExitedException("JSON does not contain an 'id' property", -14);
+        var partitionKeyToken = jObj[deleteParams.PartitionKey] ?? throw new CommandExitedException($"PartitionKey {deleteParams.PartitionKey} not found in JSON", -14);
+        PartitionKey partitionKey = partitionKeyToken.Type switch
+        {
+            JTokenType.Integer => new PartitionKey(partitionKeyToken.Value<int>()),
+            JTokenType.Float => new PartitionKey(partitionKeyToken.Value<double>()),
+            JTokenType.Boolean => new PartitionKey(partitionKeyToken.Value<bool>()),
+            JTokenType.String => new PartitionKey(partitionKeyToken.Value<string>()),
+            JTokenType.Guid => new PartitionKey(partitionKeyToken.Value<Guid>().ToString()),
+            JTokenType.Date => new PartitionKey(partitionKeyToken.Value<DateTime>().ToString("o")),
+            _ => throw new CommandExitedException($"Unsupported PartitionKey type: {partitionKeyToken.Type}", -14)
+        };
+        deleteParams.VerboseWriteLine($"PartitionKey: {partitionKeyToken} (Type: {partitionKeyToken.Type})");
 
         var itemRequestOptions = new ItemRequestOptions
         {
@@ -146,11 +153,11 @@ public static class ContainerDeleteItemCommand
         deleteParams.VerboseWriteLine("ItemRequestOptions:");
         deleteParams.VerboseWriteLine(Utilities.SerializeObject(itemRequestOptions));
         deleteParams.VerboseWriteLine("Delete...");
-        deleteParams.VerboseWriteLine(jobj.ToString());
+        deleteParams.VerboseWriteLine(jObj.ToString());
 
         var deletedItem = await container.DeleteItemAsync<dynamic>(
             id,
-            partitionKey: new PartitionKey(partitionKey),
+            partitionKey: partitionKey,
             requestOptions: itemRequestOptions
         );
 
