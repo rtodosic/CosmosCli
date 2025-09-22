@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.8.0"></a>
+## [0.8.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.8.0) (2025-09-22)
+
+### Features
+
+* upgraded Microsoft.Azure.Cosmos to 3.53.1 ([bd5d78e](https://www.github.com/rtodosic/CosmosCli/commit/bd5d78e52c85855d8f09dc581178eb415cc52142))
+
+### Bug Fixes
+
+* change Newtonsoft.Json to version 13.0.4 ([c1b2f6b](https://www.github.com/rtodosic/CosmosCli/commit/c1b2f6b4e7adb452a715c9503edab11b19541f0e))
+
 <a name="0.7.1"></a>
 ## [0.7.1](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.7.1) (2025-04-30)
 
