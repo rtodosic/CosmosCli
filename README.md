@@ -152,6 +152,7 @@ Sample **config.json** file:
     - [select-item](#container-select-item)
     - [upsert-item](#container-upsert-item)
     - [delete-item](#container-delete-item)
+    - [patch-item]
 
 ## Account Show
 This returns information about the specified Cosmos Account. This includes information about the databases and containers that are in the account.
