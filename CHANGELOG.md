@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.9.0"></a>
+## [0.9.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.9.0) (2026-02-23)
+
+### Features
+
+* add patch item upgrade to net10.0 ([43dfda3](https://www.github.com/rtodosic/CosmosCli/commit/43dfda317d2180189d917fa90ea4bac098eb2724))
+* add patch-item  to the README ([1d8c2de](https://www.github.com/rtodosic/CosmosCli/commit/1d8c2de9d4bbe5584db210e0eb61f184e3896145))
+
 <a name="0.8.0"></a>
 ## [0.8.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.8.0) (2025-09-22)
 
