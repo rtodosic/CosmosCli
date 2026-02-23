@@ -26,6 +26,7 @@ app.AddSubCommand("container", a =>
     a.AddCommand("select-item", ContainerSelectItemCommand.Command);
     a.AddCommand("upsert-item", ContainerUpsertItemCommand.Command);
     a.AddCommand("delete-item", ContainerDeleteItemCommand.Command);
+    a.AddCommand("patch-item", ContainerPatchItemCommand.Command);
 });
 
 app.Run();

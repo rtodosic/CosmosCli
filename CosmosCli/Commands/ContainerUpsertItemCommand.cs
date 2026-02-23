@@ -34,6 +34,8 @@ public static class ContainerUpsertItemCommand
                     upsertParams.Container,
                     $"/{upsertParams.PartitionKey}");
 
+                upsertParams.VerboseWriteLine($"processing...");
+
                 dynamic json;
                 var responseStats = new JArray();
                 if (jsonItems!.Trim().StartsWith("["))
@@ -72,7 +74,7 @@ public static class ContainerUpsertItemCommand
 
                 if (upsertParams.ShowStats)
                 {
-                    Utilities.WriteLine(responseStats.ToString());
+                    Utilities.WriteLine(responseStats.ToString(upsertParams.CompressJson ? Formatting.None : Formatting.Indented));
                 }
             }
             catch (Exception ex)
@@ -96,7 +98,6 @@ public static class ContainerUpsertItemCommand
     {
         if (string.IsNullOrWhiteSpace(jsonItems))
             throw new CommandExitedException("Please specify the JSON items to be upserted", -14);
-        // TODO: Validate that the JSON contains the id and partitionKey properties
     }
 
     private static string? LoadJson(ContainerUpsertItemParameters upsertParams, string? jsonItems)
@@ -106,7 +107,7 @@ public static class ContainerUpsertItemCommand
 
     private static async Task<ItemResponse<dynamic>> UpsertItemAsync(Container container, JObject jObj, ContainerUpsertItemParameters upsertParams)
     {
-        var partitionKeyToken = jObj[upsertParams.PartitionKey] ?? throw new CommandExitedException($"PartitionKey {upsertParams.PartitionKey} not found in JSON", -14);
+        var partitionKeyToken = Utilities.GetPartitionKey(jObj, upsertParams.PartitionKey.Split("/")) ?? throw new CommandExitedException($"PartitionKey {upsertParams.PartitionKey} not found in JSON", -14);
         PartitionKey partitionKey = partitionKeyToken.Type switch
         {
             JTokenType.Integer => new PartitionKey(partitionKeyToken.Value<int>()),

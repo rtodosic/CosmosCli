@@ -122,7 +122,7 @@ public static class ContainerSelectItemCommand
                 if (selectParams.PopulateIndexMetrics)
                     Utilities.WriteLine(metrics.ToString());
                 else if (selectParams.ShowStats)
-                    Utilities.WriteLine(responseStats.ToString());
+                    Utilities.WriteLine(responseStats.ToString(selectParams.CompressJson ? Formatting.None : Formatting.Indented));
                 else
                     Utilities.WriteLine(jsonArray.ToString(selectParams.CompressJson ? Formatting.None : Formatting.Indented));
 
