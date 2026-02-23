@@ -99,4 +99,15 @@ public static class Utilities
             Formatting.Indented,
             settings);
     }
+
+    public static JToken? GetPartitionKey(JObject jObj, string[] partitionKey)
+    {
+        if (partitionKey.Length == 0)
+            return null;
+
+        if (!jObj.TryGetValue(partitionKey[0], out JToken? pkToken) || pkToken == null)
+            return null;
+
+        return partitionKey.Length == 1 ? pkToken : GetPartitionKey(pkToken as JObject ?? new JObject(), partitionKey[1..]);
+    }
 }

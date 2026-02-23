@@ -41,9 +41,9 @@ public static class ContainerDeleteItemCommand
                     {
                         count++;
                         deleteParams.VerboseWriteLine($"Delete {count}...");
-                        var resource = GetKeyAndPartition(jobj, deleteParams);
-                        var deletedItem = await DeleteItemAsync(container, resource, deleteParams);
-                        jsonArray.Add(resource);
+                        //var resource = GetKeyAndPartition(jobj, deleteParams);
+                        var deletedItem = await DeleteItemAsync(container, jobj, deleteParams);
+                        jsonArray.Add(GetKeyAndPartition(jobj, deleteParams));
 
                         if (deleteParams.ShowStats)
                             responseStats.Add(Utilities.ItemResponseJson(count, deletedItem));
@@ -56,13 +56,13 @@ public static class ContainerDeleteItemCommand
                 {
                     json = JObject.Parse(jsonItems);
                     deleteParams.VerboseWriteLine("Delete json...");
-                    var resource = GetKeyAndPartition(json, deleteParams);
-                    var deletedItem = await DeleteItemAsync(container, resource, deleteParams);
+                    //var resource = GetKeyAndPartition(json, deleteParams);
+                    var deletedItem = await DeleteItemAsync(container, json, deleteParams);
 
                     if (deleteParams.ShowStats)
                         responseStats.Add(Utilities.ItemResponseJson(1, deletedItem));
                     else
-                        Utilities.WriteLine(resource.ToString(deleteParams.CompressJson ? Formatting.None : Formatting.Indented));
+                        Utilities.WriteLine(GetKeyAndPartition(json, deleteParams).ToString(deleteParams.CompressJson ? Formatting.None : Formatting.Indented));
                 }
                 else
                 {
@@ -70,7 +70,7 @@ public static class ContainerDeleteItemCommand
                 }
 
                 if (deleteParams.ShowStats)
-                    Utilities.WriteLine(responseStats.ToString());
+                    Utilities.WriteLine(responseStats.ToString(deleteParams.CompressJson ? Formatting.None : Formatting.Indented));
             }
             catch (Exception ex)
             {
@@ -104,13 +104,7 @@ public static class ContainerDeleteItemCommand
     private static JObject GetKeyAndPartition(JObject jObj, ContainerDeleteItemParameters deleteParams)
     {
         var id = jObj["id"]?.ToString();
-        if (id == null)
-            throw new CommandExitedException("JSON does not contain an 'id' property", -14);
-        var partitionKey = jObj[deleteParams.PartitionKey]?.ToString();
-        if (id == null)
-            throw new CommandExitedException($"JSON does not contain an '{deleteParams.PartitionKey}' property", -14);
-
-        deleteParams.VerboseWriteLine($"Id: {id}, PartitionKey: {partitionKey}");
+        var partitionKey = Utilities.GetPartitionKey(jObj, deleteParams.PartitionKey.Split("/"))?.ToString();
         return new JObject
         {
             ["id"] = id,
@@ -120,8 +114,9 @@ public static class ContainerDeleteItemCommand
 
     private static async Task<ItemResponse<dynamic>> DeleteItemAsync(Container container, JObject jObj, ContainerDeleteItemParameters deleteParams)
     {
+
         var id = (jObj["id"]?.ToString()) ?? throw new CommandExitedException("JSON does not contain an 'id' property", -14);
-        var partitionKeyToken = jObj[deleteParams.PartitionKey] ?? throw new CommandExitedException($"PartitionKey {deleteParams.PartitionKey} not found in JSON", -14);
+        var partitionKeyToken = Utilities.GetPartitionKey(jObj, deleteParams.PartitionKey.Split("/")) ?? throw new CommandExitedException($"PartitionKey {deleteParams.PartitionKey} not found in JSON", -14);
         PartitionKey partitionKey = partitionKeyToken.Type switch
         {
             JTokenType.Integer => new PartitionKey(partitionKeyToken.Value<int>()),
