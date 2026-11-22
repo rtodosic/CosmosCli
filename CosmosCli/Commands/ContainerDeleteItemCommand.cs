@@ -107,7 +107,7 @@ public static class ContainerDeleteItemCommand
         if (id == null)
             throw new CommandExitedException("JSON does not contain an 'id' property", -14);
         var partitionKey = jObj[deleteParams.PartitionKey]?.ToString();
-        if (id == null)
+        if (partitionKey == null)
             throw new CommandExitedException($"JSON does not contain an '{deleteParams.PartitionKey}' property", -14);
 
         deleteParams.VerboseWriteLine($"Id: {id}, PartitionKey: {partitionKey}");

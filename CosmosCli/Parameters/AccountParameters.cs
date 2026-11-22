@@ -62,7 +62,7 @@ public class AccountParameters : ICommandParameterSet
         {
             Key = Environment.GetEnvironmentVariable("COSMOSDB_KEY");
             if (!string.IsNullOrWhiteSpace(Key))
-                VerboseWriteLine($"Key - loaded from environment COSMOSDB_ENDPOINT: {Key}");
+                VerboseWriteLine($"Key - loaded from environment COSMOSDB_KEY: {Key}");
         }
 
         ReadConfigFile();
