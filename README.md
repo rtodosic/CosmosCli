@@ -417,6 +417,33 @@ The following displays RU charges, status code, activity id, and etag of the ite
 cosmos container delete-item -d TestDB -c Container1 -s -p id '[{\"id\":\"7\",\"name\":\"Bob\"},{\"id\":\"8\",\"name\":\"Bill\"}]'   
 ```
 
+## Container Patch Item
+This is used to patch documents in a container in a Cosmos database.
+
+
+The following will patch a single document in a container. Note that the partition key property must be specified in the JSON.
+```bash
+cosmos container patch-item -d TestDB -c Container1 '{\"id\":\"00000000-0000-0000-0000-000000005489\",\"partitionKey\":\"Bikes\",\"patchOperations\":[{\"op\":\"replace\",\"path\":\"/price\", \"value\": 1599.99}]}'   
+```
+
+The following will patch multiple documents in a container. Note that the partition key property must be specified in the JSON.
+```bash
+cosmos container patch-item -d TestDB -c Container1 -p '/category/name' '[{\"id\":\"00000000-0000-0000-0000-000000005489\",\"partitionKey\":\"Bikes\",\"patchOperations\":[{\"op\":\"add\",\"path\":\"/color\",\"value\":\"gold\"},{\"op\":\"replace\",\"path\":\"/price\", \"value\":1599.99}]\},{\"id\":\"00000000-0000-0000-0000-000000005481\",\"partitionKey\":\"Bikes\",
+\"patchOperations\":[{\"op\":\"add\",\"path\":\"/color\",\"value\":\"gold\"},{\"op\":\"replace\",\"path\": \"/price\", \"value\":1699.99}]}]' 
+```
+
+Valid patch operations are as follows:
+```JSON
+[
+  { "op": "add", "path": "/color", "value": "silver" },
+  { "op": "remove", "path": "/used" },
+  { "op": "set", "path": "/price", "value": 355.45 }
+  { "op": "incr", "path": "/inventory/quantity", "value": 10 },
+  { "op": "add", "path": "/tags/-", "value": "featured-bikes" },
+  { "op": "move", "from": "/color", "path": "/inventory/color" }
+]
+```
+
 ## Sample script to add a property
 
 The following is a PowerShell script to add a **discount** property with a value of **0.02** to all the documents in a container. Note that the endpoint and key have been removed to make it shorter.   
