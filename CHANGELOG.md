@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.11.1"></a>
+## [0.11.1](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.11.1) (2026-11-23)
+
+### Bug Fixes
+
+* add missing permissions for contents in GitHub Actions workflow ([29f9b87](https://www.github.com/rtodosic/CosmosCli/commit/29f9b87f014109a34d49939440c16e3fc5b0a748))
+* add permissions for GitHub OIDC token issuance in workflow ([e2618ea](https://www.github.com/rtodosic/CosmosCli/commit/e2618eaf8f8a41d0aaf7d7b47a5c03b51852c1c5))
+
 <a name="0.11.0"></a>
 ## [0.11.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.11.0) (2026-11-23)
 
