@@ -17,7 +17,7 @@ jobs:
   build:
     permissions:
       contents: write
-      id-token: write  # enable GitHub OIDC token issuance for this job
+      id-token: write
 
     runs-on: ubuntu-latest
 
@@ -75,19 +75,24 @@ jobs:
           echo "tag=$tag" >> $GITHUB_OUTPUT
 
       - name: Push changes to GitHub
-        if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
-        run: git push origin HEAD:main --follow-tags
+        if: github.ref == 'refs/heads/main'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          tags: true
 
       - name: Create GitHub Release
         if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
         id: create_release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release create "${{ steps.tag.outputs.tag }}" \
-            CosmosCli/nupkg/*.nupkg \
-            --title "${{ steps.tag.outputs.tag }}" \
-            --notes "Release notes [${{ steps.tag.outputs.tag }}](https://github.com/rtodosic/CosmosCli/blob/main/CHANGELOG.md)"
+        uses: ncipollo/release-action@v1.14.0
+        with:
+          artifacts: "**/*.nupkg"
+          name: ${{ steps.tag.outputs.tag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.tag.outputs.tag }}
+          body: |
+            Release notes [${{ steps.tag.outputs.tag }}](https://github.com/rtodosic/CosmosCli/blob/main/CHANGELOG.md)
 
       # Get a short-lived NuGet API key
       - name: NuGet login (OIDC → temp API key)
