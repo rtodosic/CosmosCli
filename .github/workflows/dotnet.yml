@@ -22,7 +22,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - name: Install Versionize
         run: dotnet tool install --global Versionize --version 2.3.0
@@ -89,6 +89,15 @@ jobs:
           body: |
             Release notes [${{ steps.tag.outputs.tag }}](https://github.com/rtodosic/CosmosCli/blob/main/CHANGELOG.md)
 
-      - name: Publish to Nuget
+      # Get a short-lived NuGet API key
+      - name: NuGet login (OIDC → temp API key)
         if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
-        run: dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+    
+      # Push the package
+      - name: NuGet push
+        if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
+        run: dotnet nuget push **/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
