@@ -15,6 +15,7 @@ public class AccountParameters : ICommandParameterSet
     [Option('k', Description = "The primary or secondary key used to connect to the Cosmos DB service.")]
     [HasDefaultValue]
     [ValidateKey]
+    [JsonIgnore]
     public string? Key { get; set; }
 
     [JsonIgnore]
@@ -39,12 +40,32 @@ public class AccountParameters : ICommandParameterSet
     {
         if (string.IsNullOrWhiteSpace(Endpoint))
         {
-            throw new CommandExitedException("endpoint is required", -10);
+            throw new CommandExitedException($"{nameof(Endpoint)} is required", -10);
         }
 
         if (string.IsNullOrWhiteSpace(Key))
         {
-            throw new CommandExitedException(" key is required", -10);
+            throw new CommandExitedException($"{nameof(Key)} is required", -10);
+        }
+
+        if (!Uri.TryCreate(Endpoint, UriKind.Absolute, out Uri? endpointUri) ||
+            (endpointUri.Scheme != Uri.UriSchemeHttp && endpointUri.Scheme != Uri.UriSchemeHttps))
+        {
+            throw new CommandExitedException($"{nameof(Endpoint)} is not a valid HTTP or HTTPS URI: '{Endpoint}'", -10);
+        }
+
+        if (Key.Any(char.IsWhiteSpace))
+        {
+            throw new CommandExitedException($"{nameof(Key)} is not valid Base64", -10);
+        }
+
+        try
+        {
+            _ = Convert.FromBase64String(Key);
+        }
+        catch (FormatException)
+        {
+            throw new CommandExitedException($"{nameof(Key)} is not valid Base64", -10);
         }
     }
 
@@ -62,7 +83,7 @@ public class AccountParameters : ICommandParameterSet
         {
             Key = Environment.GetEnvironmentVariable("COSMOSDB_KEY");
             if (!string.IsNullOrWhiteSpace(Key))
-                VerboseWriteLine($"Key - loaded from environment COSMOSDB_ENDPOINT: {Key}");
+                VerboseWriteLine($"Key - loaded from environment COSMOSDB_KEY");
         }
 
         ReadConfigFile();
@@ -114,7 +135,7 @@ public class AccountParameters : ICommandParameterSet
             }
             catch (Exception ex)
             {
-                Utilities.WarnWriteLine($"Unable to parse file ${fileName}: {ex.Message}");
+                Utilities.WarnWriteLine($"Unable to parse file {fileName}: {ex.Message}");
             }
         }
     }
