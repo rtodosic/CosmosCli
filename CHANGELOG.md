@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.10.0"></a>
+## [0.10.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.10.0) (2026-11-23)
+
+### Features
+
+* add copilot instructions for CosmosCli project ([b104d91](https://www.github.com/rtodosic/CosmosCli/commit/b104d9147ba8038ca39184b672906ed27b95d2b3))
+* update VSCode settings for improved UI colors (internal preferences) ([7dacb46](https://www.github.com/rtodosic/CosmosCli/commit/7dacb46d8bdcb5d7934fd63c8a4d88c5ccb49478))
+
+### Bug Fixes
+
+* hide the Key when serializing parameters ([dbe1f1c](https://www.github.com/rtodosic/CosmosCli/commit/dbe1f1c45aca11071d5965dbc23949d9e4d9820d))
+* update Microsoft.Azure.Cosmos package to version 3.64.0 ([95e1110](https://www.github.com/rtodosic/CosmosCli/commit/95e111091d82fd64d7d5631778f243b5279ea84f))
+
 <a name="0.9.0"></a>
 ## [0.9.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.9.0) (2026-02-23)
 
