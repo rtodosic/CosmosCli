@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="0.11.0"></a>
+## [0.11.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.11.0) (2026-11-23)
+
+### Features
+
+* Trusted Publishing to NuGet ([9b04f64](https://www.github.com/rtodosic/CosmosCli/commit/9b04f6485157735c32d6326e2148451cbbf7f5d4))
+
 <a name="0.10.0"></a>
 ## [0.10.0](https://www.github.com/rtodosic/CosmosCli/releases/tag/v0.10.0) (2026-11-23)
 
