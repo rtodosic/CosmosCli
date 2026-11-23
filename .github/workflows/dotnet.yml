@@ -9,6 +9,10 @@ on:
   pull_request:
     branches: ["main"]
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
     permissions:
@@ -30,9 +34,6 @@ jobs:
 
       - name: Install Versionize
         run: dotnet tool install --global Versionize --version 2.3.0
-
-      - name: Install dotnet format
-        run: dotnet tool install -g dotnet-format
 
       - name: Setup git
         run: |
@@ -59,7 +60,7 @@ jobs:
         continue-on-error: true
 
       - name: Pack file for Nuget
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
         run: dotnet pack -c Release
 
       - name: No Release Required
@@ -74,24 +75,19 @@ jobs:
           echo "tag=$tag" >> $GITHUB_OUTPUT
 
       - name: Push changes to GitHub
-        if: github.ref == 'refs/heads/main'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-          tags: true
+        if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
+        run: git push origin HEAD:main --follow-tags
 
       - name: Create GitHub Release
         if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
         id: create_release
-        uses: ncipollo/release-action@v1.14.0
-        with:
-          artifacts: "**/*.nupkg"
-          name: ${{ steps.tag.outputs.tag }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.tag.outputs.tag }}
-          body: |
-            Release notes [${{ steps.tag.outputs.tag }}](https://github.com/rtodosic/CosmosCli/blob/main/CHANGELOG.md)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.tag.outputs.tag }}" \
+            CosmosCli/nupkg/*.nupkg \
+            --title "${{ steps.tag.outputs.tag }}" \
+            --notes "Release notes [${{ steps.tag.outputs.tag }}](https://github.com/rtodosic/CosmosCli/blob/main/CHANGELOG.md)"
 
       # Get a short-lived NuGet API key
       - name: NuGet login (OIDC → temp API key)
@@ -104,4 +100,4 @@ jobs:
       # Push the package
       - name: NuGet push
         if: github.ref == 'refs/heads/main' && steps.versionize.outcome == 'success'
-        run: dotnet nuget push **/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "CosmosCli/nupkg/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
